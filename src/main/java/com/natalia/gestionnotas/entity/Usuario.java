@@ -1,6 +1,7 @@
 package com.natalia.gestionnotas.entity;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;

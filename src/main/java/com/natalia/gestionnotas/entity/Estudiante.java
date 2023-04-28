@@ -1,7 +1,7 @@
 package com.natalia.gestionnotas.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 
 import java.util.List;
@@ -10,18 +10,17 @@ import java.util.List;
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
  * @Email ingsergiorodriguezv@gmail.com
- * @Date 28/04/2023 - 12:08
+ * @Date 28/04/2023 - 12:35
  **/
 
 @Entity
 @PrimaryKeyJoinColumn(name = "idusuario")
-public class Profesor extends Usuario{
+public class Estudiante extends Usuario{
 
-    @OneToMany(mappedBy = "profesor")
+    @ManyToMany(mappedBy = "estudiantes")
     private List<Asignatura> asignaturas;
 
     /** Getter y Setter **/
-
     public List<Asignatura> getAsignaturas() {
         return asignaturas;
     }
