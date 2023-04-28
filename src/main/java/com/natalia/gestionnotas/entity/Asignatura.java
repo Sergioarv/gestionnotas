@@ -3,7 +3,6 @@ package com.natalia.gestionnotas.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,33 +32,20 @@ public class Asignatura implements Serializable {
             joinColumns = @JoinColumn(name = "idasignatura", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "idestudiante", nullable = false)
     )
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Estudiante> estudiantes;
+    @OneToMany(mappedBy = "asignatura")
+    private List<Asigestud> asigestuds;
 
-    public void agregarEstudiante(Estudiante estudiante){
-        if(this.estudiantes == null){
-            this.estudiantes = new ArrayList<>();
-        }
-
-        this.estudiantes.add(estudiante);
-    }
-
-    public void removerEstudiante( Estudiante estudiante){
-        this.estudiantes.remove(estudiante);
-        estudiante.getAsignaturas().remove(this);
-    }
 
     /** Constructor **/
     public Asignatura() {
     }
 
-    public Asignatura(int idasignatura, String nombre) {
-        this.idasignatura = idasignatura;
+    public Asignatura(int idasignatura, String nombre, Profesor profesor, List<Asigestud> asigestuds) {
         this.nombre = nombre;
+        this.profesor = profesor;
     }
 
-    /** Getter y Setter **/
-
+/** Getter y Setter **/
     public int getIdasignatura() {
         return idasignatura;
     }
@@ -84,11 +70,11 @@ public class Asignatura implements Serializable {
         this.profesor = profesor;
     }
 
-    public List<Estudiante> getEstudiantes() {
-        return estudiantes;
+    public List<Asigestud> getAsigestuds() {
+        return asigestuds;
     }
 
-    public void setEstudiantes(List<Estudiante> estudiantes) {
-        this.estudiantes = estudiantes;
+    public void setAsigestuds(List<Asigestud> asigestuds) {
+        this.asigestuds = asigestuds;
     }
 }
