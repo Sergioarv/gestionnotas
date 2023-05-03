@@ -8,16 +8,16 @@ import java.io.Serializable;
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
  * @Email ingsergiorodriguezv@gmail.com
- * @Date 28/04/2023 - 13:39
+ * @Date 03/05/2023 - 11:19
  **/
 
 @Entity
-@Table(name = "asigestud")
-public class Asigestud implements Serializable {
+@Table(name = "nota")
+public class Nota implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idasigestud;
+    private int idnota;
 
     @ManyToOne
     @JoinColumn(name = "idestudiante")
@@ -27,27 +27,24 @@ public class Asigestud implements Serializable {
     @JoinColumn(name = "idasignatura")
     private Asignatura asignatura;
 
-    @Column(name = "nota")
-    private float nota;
-
     /** Constructor **/
-    public Asigestud() {
+
+    public Nota() {
     }
 
-    public Asigestud(Estudiante estudiante, Asignatura asignatura, float nota) {
+    public Nota(Estudiante estudiante, Asignatura asignatura) {
         this.estudiante = estudiante;
         this.asignatura = asignatura;
-        this.nota = nota;
     }
 
-    /** Setter y Getter **/
+    /** Getter y Setter **/
 
-    public int getIdasigestud() {
-        return idasigestud;
+    public int getIdnota() {
+        return idnota;
     }
 
-    public void setIdasigestud(int idasigestud) {
-        this.idasigestud = idasigestud;
+    public void setIdnota(int idnota) {
+        this.idnota = idnota;
     }
 
     public Estudiante getEstudiante() {
@@ -64,13 +61,5 @@ public class Asigestud implements Serializable {
 
     public void setAsignatura(Asignatura asignatura) {
         this.asignatura = asignatura;
-    }
-
-    public float getNota() {
-        return nota;
-    }
-
-    public void setNota(float nota) {
-        this.nota = nota;
     }
 }

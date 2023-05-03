@@ -3,6 +3,7 @@ package com.natalia.gestionnotas.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,29 +24,43 @@ public class Asignatura implements Serializable {
     @Column(name = "nombre")
     private String nombre;
 
-    @ManyToOne
-    @JoinColumn(name = "idusuario")
-    private Profesor profesor;
-
     @JoinTable(
-            name = "asig_estudiante",
+            name = "asignatura_grupo",
             joinColumns = @JoinColumn(name = "idasignatura", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "idestudiante", nullable = false)
+            inverseJoinColumns = @JoinColumn(name = "idgrupo", nullable = false)
     )
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Grupo> grupos;
+
     @OneToMany(mappedBy = "asignatura")
-    private List<Asigestud> asigestuds;
+    private List<Nota> notas;
 
+    public void agregarGrupo(Grupo grupo) {
+        if (this.grupos == null) {
+            this.grupos = new ArrayList<>();
+        }
 
-    /** Constructor **/
+        this.grupos.add(grupo);
+    }
+
+    public void removerGrupo(Grupo grupo) {
+        this.grupos.remove(grupo);
+        grupo.getAsignaturas().remove(this);
+    }
+
+    /**
+     * Constructor
+     **/
     public Asignatura() {
     }
 
-    public Asignatura(int idasignatura, String nombre, Profesor profesor, List<Asigestud> asigestuds) {
+    public Asignatura(String nombre) {
         this.nombre = nombre;
-        this.profesor = profesor;
     }
 
-/** Getter y Setter **/
+    /**
+     * Getter y Setter
+     **/
     public int getIdasignatura() {
         return idasignatura;
     }
@@ -62,19 +77,19 @@ public class Asignatura implements Serializable {
         this.nombre = nombre;
     }
 
-    public Profesor getProfesor() {
-        return profesor;
+    public List<Grupo> getGrupos() {
+        return grupos;
     }
 
-    public void setProfesor(Profesor profesor) {
-        this.profesor = profesor;
+    public void setGrupos(List<Grupo> grupos) {
+        this.grupos = grupos;
     }
 
-    public List<Asigestud> getAsigestuds() {
-        return asigestuds;
+    public List<Nota> getNotas() {
+        return notas;
     }
 
-    public void setAsigestuds(List<Asigestud> asigestuds) {
-        this.asigestuds = asigestuds;
+    public void setNotas(List<Nota> notas) {
+        this.notas = notas;
     }
 }

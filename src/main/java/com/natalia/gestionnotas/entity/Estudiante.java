@@ -1,9 +1,6 @@
 package com.natalia.gestionnotas.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -16,17 +13,30 @@ import java.util.List;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "idusuario")
-public class Estudiante extends Usuario{
+public class Estudiante extends Usuario {
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "estudiante")
-    private List<Asigestud> asigestuds;
+    @ManyToOne
+    @JoinColumn(name = "idgrupo")
+    private Grupo grupo;
+
+    @OneToMany(mappedBy = "estudiante")
+    private List<Nota> notas;
 
     /** Getter y Setter **/
-    public List<Asigestud> getAsigestuds() {
-        return asigestuds;
+
+    public Grupo getGrupo() {
+        return grupo;
     }
 
-    public void setAsigestuds(List<Asigestud> asigestuds) {
-        this.asigestuds = asigestuds;
+    public void setGrupo(Grupo grupo) {
+        this.grupo = grupo;
+    }
+
+    public List<Nota> getNotas() {
+        return notas;
+    }
+
+    public void setNotas(List<Nota> notas) {
+        this.notas = notas;
     }
 }
