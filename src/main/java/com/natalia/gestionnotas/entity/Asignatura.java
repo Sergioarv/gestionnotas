@@ -30,6 +30,10 @@ public class Asignatura implements Serializable {
     @OneToMany(mappedBy="asignatura")
     private List<Nota> notas = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "idusuario")
+    private Profesor profesor;
+
     /**
      * Getter y Setter
      **/
@@ -56,5 +60,9 @@ public class Asignatura implements Serializable {
 
     public void setNotas(List<Nota> notas) {
         this.notas = notas;
+    }
+
+    public void setProfesor(Profesor profesor) {
+        this.profesor = profesor;
     }
 }

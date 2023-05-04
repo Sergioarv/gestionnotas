@@ -13,4 +13,6 @@ import java.util.List;
 public interface EstudianteService {
 
     public List<Estudiante> filtrar(String nombre, String apellido);
+
+    Estudiante agregarEstudiante(Estudiante estudiante);
 }

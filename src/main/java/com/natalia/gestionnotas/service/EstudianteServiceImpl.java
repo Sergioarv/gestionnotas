@@ -1,12 +1,16 @@
 package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Estudiante;
+import com.natalia.gestionnotas.entity.Rol;
 import com.natalia.gestionnotas.repository.EstudianteRepository;
+import com.natalia.gestionnotas.security.enums.RolNombre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Project gestionnotas
@@ -25,5 +29,16 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Transactional(readOnly = true)
     public List<Estudiante> filtrar(String nombre, String apellido) {
         return estudianteRepository.filtrar();
+    }
+
+    @Override
+    @Transactional
+    public Estudiante agregarEstudiante(Estudiante estudiante) {
+
+//        Set<Rol> roles = new HashSet<>();
+//        roles.add(rolService.getByRolNombre(RolNombre.ROLE_ESTUDIANTE).get());
+//        estudiante.setRoles(roles);
+
+        return estudianteRepository.save(estudiante);
     }
 }

@@ -28,8 +28,19 @@ public class EstudianteController {
     public ResponseEntity<List<Estudiante>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,
             @RequestParam(value = "apellido", required = false) String apellido
-    ){
+    ) {
         List<Estudiante> data = estudanteService.filtrar(nombre, apellido);
+
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
+    @PostMapping
+    private ResponseEntity<Estudiante> agregarEstudiante(
+            @RequestBody Estudiante estudiante) {
+
+        Estudiante nuevoEstudiante;
+
+        Estudiante data = estudanteService.agregarEstudiante(estudiante);
 
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
