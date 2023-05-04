@@ -1,16 +1,12 @@
 package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Estudiante;
-import com.natalia.gestionnotas.entity.Rol;
 import com.natalia.gestionnotas.repository.EstudianteRepository;
-import com.natalia.gestionnotas.security.enums.RolNombre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @Project gestionnotas
