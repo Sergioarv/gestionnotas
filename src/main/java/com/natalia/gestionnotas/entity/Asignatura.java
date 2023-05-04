@@ -65,4 +65,5 @@ public class Asignatura implements Serializable {
     public void setProfesor(Profesor profesor) {
         this.profesor = profesor;
     }
+
 }

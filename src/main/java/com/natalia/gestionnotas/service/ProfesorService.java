@@ -2,6 +2,8 @@ package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Profesor;
 
+import java.util.List;
+
 /**
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
@@ -12,4 +14,6 @@ import com.natalia.gestionnotas.entity.Profesor;
 public interface ProfesorService {
 
     Profesor agregarProfesor(Profesor profesor);
+
+    List<Profesor> filtrar(String nombre, String apellido);
 }

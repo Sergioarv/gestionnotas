@@ -1,7 +1,7 @@
 package com.natalia.gestionnotas.service;
 
-import com.natalia.gestionnotas.entity.Profesor;
-import com.natalia.gestionnotas.repository.ProfesorRepository;
+import com.natalia.gestionnotas.entity.Nota;
+import com.natalia.gestionnotas.repository.NotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,26 +12,25 @@ import java.util.List;
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
  * @Email ingsergiorodriguezv@gmail.com
- * @Date 04/05/2023 - 11:51
+ * @Date 04/05/2023 - 12:47
  **/
 
 @Service
-public class ProfesorServiceImpl implements ProfesorService {
+public class NotaServiceImpl implements NotaService {
 
     @Autowired
-    private ProfesorRepository profesorRepository;
+    private NotaRepository notaRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<Profesor> filtrar(String nombre, String apellido) {
-
-        return profesorRepository.filtrar();
+    public List<Nota> filtrar() {
+        return notaRepository.findAll();
     }
 
     @Override
     @Transactional
-    public Profesor agregarProfesor(Profesor profesor) {
-        return profesorRepository.save(profesor);
+    public Nota agregarNota(Nota nota) {
+        return notaRepository.save(nota);
     }
 
 
