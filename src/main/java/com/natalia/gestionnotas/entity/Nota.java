@@ -19,44 +19,39 @@ public class Nota implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idnota;
 
+    @Column(name = "calificacion")
+    private String calificacion;
+
     @ManyToOne
-    @JoinColumn(name = "idestudiante")
+    @JoinColumn(name = "idusuario")
     private Estudiante estudiante;
 
     @ManyToOne
     @JoinColumn(name = "idasignatura")
     private Asignatura asignatura;
 
-    /** Constructor **/
-
-    public Nota() {
-    }
-
-    public Nota(Estudiante estudiante, Asignatura asignatura) {
-        this.estudiante = estudiante;
-        this.asignatura = asignatura;
-    }
-
-    /** Getter y Setter **/
+    /**
+     * Getter y Setter
+     **/
 
     public int getIdnota() {
         return idnota;
+    }
+
+    public String getCalificacion() {
+        return calificacion;
     }
 
     public void setIdnota(int idnota) {
         this.idnota = idnota;
     }
 
-    public Estudiante getEstudiante() {
-        return estudiante;
+    public void setCalificacion(String calificacion) {
+        this.calificacion = calificacion;
     }
 
     public void setEstudiante(Estudiante estudiante) {
         this.estudiante = estudiante;
-    }
-
-    public Asignatura getAsignatura() {
-        return asignatura;
     }
 
     public void setAsignatura(Asignatura asignatura) {

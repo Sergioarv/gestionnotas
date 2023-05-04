@@ -34,7 +34,7 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     private String contrasenia;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "idusuario", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "idrol", nullable = false))
     private Set<Rol> roles = new HashSet<>();

@@ -2,7 +2,10 @@ package com.natalia.gestionnotas.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Project gestionnotas
@@ -15,22 +18,12 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "idusuario")
 public class Estudiante extends Usuario {
 
-    @ManyToOne
-    @JoinColumn(name = "idgrupo")
-    private Grupo grupo;
-
     @OneToMany(mappedBy = "estudiante")
-    private List<Nota> notas;
+    private List<Nota> notas = new ArrayList<>();
 
-    /** Getter y Setter **/
-
-    public Grupo getGrupo() {
-        return grupo;
-    }
-
-    public void setGrupo(Grupo grupo) {
-        this.grupo = grupo;
-    }
+    /**
+     * Getter y Setter
+     **/
 
     public List<Nota> getNotas() {
         return notas;

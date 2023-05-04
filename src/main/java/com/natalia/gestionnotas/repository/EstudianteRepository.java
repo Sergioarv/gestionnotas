@@ -17,6 +17,6 @@ import java.util.List;
 @Repository
 public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
 
-    @Query(value = "select * from usuario u", nativeQuery = true)
+    @Query(value = "select * from usuario", nativeQuery = true)
     List<Estudiante> filtrar();
 }
