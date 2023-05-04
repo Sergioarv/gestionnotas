@@ -1,7 +1,6 @@
 package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Profesor;
-import org.springframework.stereotype.Service;
 
 /**
  * @Project gestionnotas
@@ -12,5 +11,5 @@ import org.springframework.stereotype.Service;
 
 public interface ProfesorService {
 
-    Profesor agregarEstudiante(Profesor profesor);
+    Profesor agregarProfesor(Profesor profesor);
 }

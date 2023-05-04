@@ -1,7 +1,8 @@
 package com.natalia.gestionnotas.controller;
 
-import com.natalia.gestionnotas.entity.Profesor;
-import com.natalia.gestionnotas.service.ProfesorService;
+import com.natalia.gestionnotas.entity.Asignatura;
+import com.natalia.gestionnotas.entity.Estudiante;
+import com.natalia.gestionnotas.service.AsignaturaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,24 +12,24 @@ import org.springframework.web.bind.annotation.*;
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
  * @Email ingsergiorodriguezv@gmail.com
- * @Date 04/05/2023 - 11:52
+ * @Date 04/05/2023 - 12:02
  **/
 
 @RestController
-@RequestMapping("/profesor")
+@RequestMapping("/asignatura")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-public class ProfesorController {
+public class AsignaturaController {
 
     @Autowired
-    private ProfesorService profesorService;
+    private AsignaturaService asignaturaService;
 
     @PostMapping
-    private ResponseEntity<Profesor> agregarProfesor(
-            @RequestBody Profesor profesor) {
+    private ResponseEntity<Asignatura> agregarEstudiante(
+            @RequestBody Asignatura asignatura) {
 
-        Profesor nuevoEstudiante;
+        Asignatura nuevoAsignatura;
 
-        Profesor data = profesorService.agregarProfesor(profesor);
+        Asignatura data = asignaturaService.agregarAsignatura(asignatura);
 
         return new ResponseEntity<>(data, HttpStatus.OK);
     }

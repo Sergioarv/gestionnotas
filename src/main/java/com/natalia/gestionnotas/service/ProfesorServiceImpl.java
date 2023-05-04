@@ -19,7 +19,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     private ProfesorRepository profesorRepository;
 
     @Override
-    public Profesor agregarEstudiante(Profesor profesor) {
+    public Profesor agregarProfesor(Profesor profesor) {
         return profesorRepository.save(profesor);
     }
 }
