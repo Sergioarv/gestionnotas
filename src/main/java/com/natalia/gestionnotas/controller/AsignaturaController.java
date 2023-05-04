@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
@@ -22,6 +24,15 @@ public class AsignaturaController {
 
     @Autowired
     private AsignaturaService asignaturaService;
+
+    @GetMapping("/filtrar")
+    public ResponseEntity<List<Asignatura>> filtrar(
+
+    ) {
+        List<Asignatura> data = asignaturaService.filtrar();
+
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 
     @PostMapping
     private ResponseEntity<Asignatura> agregarEstudiante(

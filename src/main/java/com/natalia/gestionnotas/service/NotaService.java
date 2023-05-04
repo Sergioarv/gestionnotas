@@ -1,6 +1,8 @@
 package com.natalia.gestionnotas.service;
 
+import com.natalia.gestionnotas.dto.NotasDTO;
 import com.natalia.gestionnotas.entity.Nota;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
  **/
 public interface NotaService {
 
-    List<Nota> filtrar();
+    List<NotasDTO> filtrar(String nombre, String apellido, String materia, Pageable pageable);
 
 
     Nota agregarNota(Nota nota);

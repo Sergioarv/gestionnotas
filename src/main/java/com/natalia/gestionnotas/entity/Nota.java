@@ -57,4 +57,12 @@ public class Nota implements Serializable {
     public void setAsignatura(Asignatura asignatura) {
         this.asignatura = asignatura;
     }
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public Asignatura getAsignatura() {
+        return asignatura;
+    }
 }

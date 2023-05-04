@@ -4,6 +4,9 @@ import com.natalia.gestionnotas.entity.Asignatura;
 import com.natalia.gestionnotas.repository.AsignaturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @Project gestionnotas
@@ -19,7 +22,16 @@ public class AsignaturaServiceImpl implements AsignaturaService {
     private AsignaturaRepository asignaturaRepository;
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Asignatura> filtrar() {
+        return asignaturaRepository.findAll();
+    }
+
+    @Override
+    @Transactional
     public Asignatura agregarAsignatura(Asignatura asignatura) {
         return asignaturaRepository.save(asignatura);
     }
+
+
 }

@@ -3,6 +3,8 @@ package com.natalia.gestionnotas.service;
 import com.natalia.gestionnotas.entity.Asignatura;
 import com.natalia.gestionnotas.entity.Estudiante;
 
+import java.util.List;
+
 /**
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
@@ -12,4 +14,6 @@ import com.natalia.gestionnotas.entity.Estudiante;
 public interface AsignaturaService {
 
     Asignatura agregarAsignatura(Asignatura asignatura);
+
+    List<Asignatura> filtrar();
 }

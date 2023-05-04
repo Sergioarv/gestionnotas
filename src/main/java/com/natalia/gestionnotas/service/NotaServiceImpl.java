@@ -1,12 +1,15 @@
 package com.natalia.gestionnotas.service;
 
+import com.natalia.gestionnotas.dto.NotasDTO;
 import com.natalia.gestionnotas.entity.Nota;
 import com.natalia.gestionnotas.repository.NotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Project gestionnotas
@@ -23,14 +26,34 @@ public class NotaServiceImpl implements NotaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Nota> filtrar() {
-        return notaRepository.findAll();
+    public List<NotasDTO> filtrar(String nombre, String apellido, String materia, Pageable pageable) {
+
+        if(nombre == null){
+            nombre = "";
+        }
+
+        if(apellido == null){
+            apellido = "";
+        }
+
+        if ( materia == null){
+             materia = "";
+        }
+
+        return notaRepository.filtrarNAM(nombre, apellido, materia, pageable);
     }
 
     @Override
     @Transactional
     public Nota agregarNota(Nota nota) {
-        return notaRepository.save(nota);
+
+        Optional<Nota> result = notaRepository.findByEstudianteAndAsignatura(nota.getEstudiante(), nota.getAsignatura());
+
+        if(!result.isPresent()){
+            return notaRepository.save(nota);
+        }
+
+        return null;
     }
 
 
