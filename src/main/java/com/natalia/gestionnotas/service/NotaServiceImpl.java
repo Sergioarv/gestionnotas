@@ -28,16 +28,16 @@ public class NotaServiceImpl implements NotaService {
     @Transactional(readOnly = true)
     public List<NotasDTO> filtrar(String nombre, String apellido, String materia, Pageable pageable) {
 
-        if(nombre == null){
+        if (nombre == null) {
             nombre = "";
         }
 
-        if(apellido == null){
+        if (apellido == null) {
             apellido = "";
         }
 
-        if ( materia == null){
-             materia = "";
+        if (materia == null) {
+            materia = "";
         }
 
         return notaRepository.filtrarNAM(nombre, apellido, materia, pageable);
@@ -49,12 +49,37 @@ public class NotaServiceImpl implements NotaService {
 
         Optional<Nota> result = notaRepository.findByEstudianteAndAsignatura(nota.getEstudiante(), nota.getAsignatura());
 
-        if(!result.isPresent()){
+        if (!result.isPresent()) {
             return notaRepository.save(nota);
         }
 
         return null;
     }
 
+    @Override
+    @Transactional
+    public Nota editarNota(Nota nota) {
+
+        Optional<Nota> result = notaRepository.findById(nota.getIdnota());
+
+        if (result.isPresent()) {
+            return notaRepository.save(nota);
+        }
+
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public Boolean eliminarNota(Nota nota) {
+
+        Optional<Nota> result = notaRepository.findById(nota.getIdnota());
+
+        if (result.isPresent()) {
+            notaRepository.delete(nota);
+        }
+
+        return null;
+    }
 
 }

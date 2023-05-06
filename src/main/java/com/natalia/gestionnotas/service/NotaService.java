@@ -18,4 +18,8 @@ public interface NotaService {
 
 
     Nota agregarNota(Nota nota);
+
+    Nota editarNota(Nota nota);
+
+    Boolean eliminarNota(Nota nota);
 }

@@ -48,8 +48,28 @@ public class NotaController {
     @PostMapping
     private ResponseEntity<Nota> agregarNota(
             @RequestBody Nota nota
-    ){
+    ) {
         Nota data = notaService.agregarNota(nota);
+
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
+    @PutMapping
+    private ResponseEntity<Nota> editarNota(
+            @RequestBody Nota nota
+    ) {
+        Nota data = notaService.editarNota(nota);
+
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    private ResponseEntity<Boolean> eliminarNota(
+            @RequestBody Nota nota
+    ) {
+        Boolean data;
+
+        data = notaService.eliminarNota(nota);
 
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
