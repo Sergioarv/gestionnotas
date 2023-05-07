@@ -1,5 +1,6 @@
 package com.natalia.gestionnotas.entity;
 
+
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -30,6 +31,7 @@ public class Nota implements Serializable {
     @JoinColumn(name = "idasignatura")
     private Asignatura asignatura;
 
+
     /**
      * Getter y Setter
      **/
@@ -58,11 +60,5 @@ public class Nota implements Serializable {
         this.asignatura = asignatura;
     }
 
-    public Estudiante getEstudiante() {
-        return estudiante;
-    }
 
-    public Asignatura getAsignatura() {
-        return asignatura;
-    }
 }

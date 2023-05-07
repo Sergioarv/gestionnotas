@@ -1,12 +1,11 @@
 package com.natalia.gestionnotas.entity;
 
+
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @Project gestionnotas
@@ -38,32 +37,29 @@ public class Asignatura implements Serializable {
      * Getter y Setter
      **/
 
+
     public int getIdasignatura() {
         return idasignatura;
-    }
-
-    public void setIdasignatura(int idasignatura) {
-        this.idasignatura = idasignatura;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public List<Nota> getNotas() {
         return notas;
     }
 
-    public void setNotas(List<Nota> notas) {
-        this.notas = notas;
+    public void setIdasignatura(int idasignatura) {
+        this.idasignatura = idasignatura;
     }
 
-    public void setProfesor(Profesor profesor) {
-        this.profesor = profesor;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setNotas(List<Nota> notas) {
+        this.notas = notas;
     }
 
 }

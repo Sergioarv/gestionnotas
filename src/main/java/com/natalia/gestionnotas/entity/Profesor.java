@@ -1,8 +1,6 @@
 package com.natalia.gestionnotas.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Asignatura;
-import com.natalia.gestionnotas.entity.Estudiante;
 
 import java.util.List;
 

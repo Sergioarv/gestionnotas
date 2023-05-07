@@ -3,10 +3,12 @@ package com.natalia.gestionnotas.service;
 import com.natalia.gestionnotas.entity.Profesor;
 import com.natalia.gestionnotas.repository.ProfesorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
  * @Project gestionnotas
@@ -23,16 +25,58 @@ public class ProfesorServiceImpl implements ProfesorService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Profesor> filtrar(String nombre, String apellido) {
+    public Page<Profesor> filtrar(String nombre, String apellido, PageRequest pageable) {
 
-        return profesorRepository.filtrar();
+        if(nombre == null && apellido == null){
+        return profesorRepository.findAll(pageable);
+        }else{
+            if(nombre == null){
+                nombre = "";
+            }
+
+            if(apellido == null){
+                apellido = "";
+            }
+
+            return profesorRepository.filtrarP(nombre, apellido, pageable);
+        }
     }
 
     @Override
     @Transactional
     public Profesor agregarProfesor(Profesor profesor) {
-        return profesorRepository.save(profesor);
+
+        Optional<Profesor> result = profesorRepository.findAllByCorreo(profesor);
+
+        if(!result.isPresent()){
+            return profesorRepository.save(profesor);
+        }
+
+        return null;
     }
 
+    @Override
+    @Transactional
+    public Profesor editarProfesor(Profesor profesor) {
 
+        Optional<Profesor> result = profesorRepository.findById(profesor.getIdusuario());
+
+        if(result.isPresent()){
+            profesorRepository.save(profesor);
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean eliminarProfesor(Profesor profesor) {
+
+        Optional<Profesor> result = profesorRepository.findById(profesor.getIdusuario());
+
+        if(result.isPresent()){
+            profesorRepository.delete(profesor);
+        }
+
+        return false;
+    }
 }

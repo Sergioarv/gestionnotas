@@ -1,5 +1,6 @@
 package com.natalia.gestionnotas.entity;
 
+
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -40,7 +41,7 @@ public class Usuario implements Serializable {
     private Set<Rol> roles = new HashSet<>();
 
     /**
-     *  COnstructor
+     *  Constructor
      */
 
     public Usuario() {

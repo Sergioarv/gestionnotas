@@ -3,6 +3,7 @@ package com.natalia.gestionnotas.entity;
 import com.natalia.gestionnotas.security.enums.RolNombre;
 import jakarta.persistence.*;
 
+
 /**
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez

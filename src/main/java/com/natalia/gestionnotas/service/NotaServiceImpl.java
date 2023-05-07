@@ -47,13 +47,13 @@ public class NotaServiceImpl implements NotaService {
     @Transactional
     public Nota agregarNota(Nota nota) {
 
-        Optional<Nota> result = notaRepository.findByEstudianteAndAsignatura(nota.getEstudiante(), nota.getAsignatura());
+//        Optional<Nota> result = notaRepository.findByEstudianteAndAsignatura();
 
-        if (!result.isPresent()) {
+//        if (!result.isPresent()) {
             return notaRepository.save(nota);
-        }
+//        }
 
-        return null;
+//        return null;
     }
 
     @Override

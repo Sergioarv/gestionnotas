@@ -1,7 +1,6 @@
 package com.natalia.gestionnotas.controller;
 
 import com.natalia.gestionnotas.entity.Asignatura;
-import com.natalia.gestionnotas.entity.Estudiante;
 import com.natalia.gestionnotas.service.AsignaturaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
