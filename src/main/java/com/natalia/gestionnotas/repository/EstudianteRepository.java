@@ -1,11 +1,15 @@
 package com.natalia.gestionnotas.repository;
 
 import com.natalia.gestionnotas.entity.Estudiante;
+import com.natalia.gestionnotas.entity.Profesor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Project gestionnotas
@@ -19,4 +23,9 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 
     @Query(value = "select e from Estudiante e")
     List<Estudiante> filtrar();
+
+    @Query(value = "select * from usuario where lower(nombre) like lower(concat('%',:nombre,'%')) and lower(apellido) like lower(concat('%',:apellido,'%'))", nativeQuery = true)
+    Page<Estudiante> filtrarP(String nombre, String apellido, PageRequest pageable);
+
+    Optional<Profesor> findAllByCorreo(Estudiante estudiante);
 }

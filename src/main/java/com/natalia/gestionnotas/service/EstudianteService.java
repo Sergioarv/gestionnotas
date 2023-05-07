@@ -1,8 +1,8 @@
 package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Estudiante;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 /**
  * @Project gestionnotas
@@ -12,7 +12,11 @@ import java.util.List;
  **/
 public interface EstudianteService {
 
-    public List<Estudiante> filtrar(String nombre, String apellido);
+    public Page<Estudiante> filtrar(String nombre, String apellido, PageRequest pageable);
 
     Estudiante agregarEstudiante(Estudiante estudiante);
+
+    Estudiante editarEstudiante(Estudiante estudiante);
+
+    boolean eliminarEstudiante(Estudiante estudiante);
 }
