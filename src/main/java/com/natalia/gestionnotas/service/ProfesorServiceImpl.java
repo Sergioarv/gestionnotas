@@ -46,7 +46,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Transactional
     public Profesor agregarProfesor(Profesor profesor) {
 
-        Optional<Profesor> result = profesorRepository.findAllByCorreo(profesor);
+        Optional<Profesor> result = profesorRepository.findByCorreo(profesor);
 
         if(!result.isPresent()){
             return profesorRepository.save(profesor);

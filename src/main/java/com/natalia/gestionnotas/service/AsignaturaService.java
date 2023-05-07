@@ -1,8 +1,8 @@
 package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Asignatura;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 /**
  * @Project gestionnotas
@@ -12,7 +12,11 @@ import java.util.List;
  **/
 public interface AsignaturaService {
 
+    Page<Asignatura> filtrar(String nombre, PageRequest pageable);
+
     Asignatura agregarAsignatura(Asignatura asignatura);
 
-    List<Asignatura> filtrar();
+    Asignatura editarAsignatura(Asignatura asignatura);
+
+    boolean eliminarAsignatura(Asignatura asignaturaService);
 }
