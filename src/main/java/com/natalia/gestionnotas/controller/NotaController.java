@@ -3,7 +3,9 @@ package com.natalia.gestionnotas.controller;
 import com.natalia.gestionnotas.dto.NotasDTO;
 import com.natalia.gestionnotas.entity.Nota;
 import com.natalia.gestionnotas.service.NotaService;
+import com.natalia.gestionnotas.utils.ResponseGeneral;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,7 @@ public class NotaController {
     private NotaService notaService;
 
     @GetMapping("/filtrar")
-    public ResponseEntity<List<NotasDTO>> filtrar(
+    public ResponseEntity<ResponseGeneral<Page<NotasDTO>>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,
             @RequestParam(value = "apellido", required = false) String apellido,
             @RequestParam(value = "materia", required = false) String materia,
@@ -36,39 +38,127 @@ public class NotaController {
             @RequestParam(value = "cantPagina", defaultValue = "10", required = false) int cantPagina
     ) {
 
-        Pageable pageable = PageRequest.of(pagina, cantPagina);
+        ResponseGeneral<Page<NotasDTO>> response = new ResponseGeneral<>();
+        Page<NotasDTO> data;
 
-        List<NotasDTO> data = notaService.filtrar(nombre, apellido, materia, pageable);
+        try {
+            PageRequest pageable = PageRequest.of(pagina, cantPagina);
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+            data = notaService.filtrar(nombre, apellido, materia, pageable);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("Erro al obtener la lista");
+                response.setSuccess(false);
+            } else {
+                if (data.getContent().size() == 0) {
+                    response.setData(data);
+                    response.setMessage("La lista de notas esta vacia");
+                    response.setSuccess(false);
+                } else {
+                    response.setData(data);
+                    response.setMessage("Lista de notas obtenida con exito");
+                    response.setSuccess(true);
+                }
+            }
+
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping
-    private ResponseEntity<Nota> agregarNota(
+    private ResponseEntity<ResponseGeneral<Nota>> agregarNota(
             @RequestBody Nota nota
     ) {
-        Nota data = notaService.agregarNota(nota);
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        ResponseGeneral<Nota> response = new ResponseGeneral<>();
+        Nota data;
+
+        try {
+
+            data = notaService.agregarNota(nota);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("No es posible agregar la nota");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Nota agregada con exito");
+                response.setSuccess(true);
+            }
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
-    private ResponseEntity<Nota> editarNota(
+    private ResponseEntity<ResponseGeneral<Nota>> editarNota(
             @RequestBody Nota nota
     ) {
-        Nota data = notaService.editarNota(nota);
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        ResponseGeneral<Nota> response = new ResponseGeneral();
+        Nota data;
+
+        try {
+
+            data = notaService.editarNota(nota);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("No es posible editar la nota");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Nota editada con exito");
+                response.setSuccess(true);
+            }
+
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping
-    private ResponseEntity<Boolean> eliminarNota(
+    private ResponseEntity<ResponseGeneral<Boolean>> eliminarNota(
             @RequestBody Nota nota
     ) {
+        ResponseGeneral<Boolean> response = new ResponseGeneral<>();
         Boolean data;
 
-        data = notaService.eliminarNota(nota);
+        try {
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+            data = notaService.eliminarNota(nota);
+
+            if (data == false) {
+                response.setData(null);
+                response.setMessage("No es posible eliminar la nota");
+                response.setSuccess(false);
+            } else {
+                response.setData(true);
+                response.setMessage("Nota eliminada con exito");
+                response.setSuccess(true);
+            }
+
+        } catch (Exception e) {
+            response.setData(false);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

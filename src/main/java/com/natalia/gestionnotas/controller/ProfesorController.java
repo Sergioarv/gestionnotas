@@ -2,6 +2,7 @@ package com.natalia.gestionnotas.controller;
 
 import com.natalia.gestionnotas.entity.Profesor;
 import com.natalia.gestionnotas.service.ProfesorService;
+import com.natalia.gestionnotas.utils.ResponseGeneral;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,50 +26,132 @@ public class ProfesorController {
     private ProfesorService profesorService;
 
     @GetMapping("/filtrar")
-    public ResponseEntity<Page<Profesor>> filtrar(
+    public ResponseEntity<ResponseGeneral<Page<Profesor>>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,
             @RequestParam(value = "apellido", required = false) String apellido,
             @RequestParam(value = "pagina", defaultValue = "0", required = false) int pagina,
             @RequestParam(value = "cantPagina", defaultValue = "10", required = false) int cantPagina
     ) {
 
+        ResponseGeneral<Page<Profesor>> response = new ResponseGeneral<>();
         Page<Profesor> data;
+
         try {
+
             PageRequest pageable = PageRequest.of(pagina, cantPagina);
 
             data = profesorService.filtrar(nombre, apellido, pageable);
 
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("Erro al obtener la lista");
+                response.setSuccess(false);
+            } else {
+                if (data.getContent().size() == 0) {
+                    response.setData(data);
+                    response.setMessage("La lista de profesores esta vacia");
+                    response.setSuccess(false);
+                } else {
+                    response.setData(data);
+                    response.setMessage("Lista de profesores obtenida con exito");
+                    response.setSuccess(true);
+                }
+            }
+
         } catch (Exception e) {
-            data = null;
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
         }
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping
-    private ResponseEntity<Profesor> agregarProfesor(
+    private ResponseEntity<ResponseGeneral<Profesor>> agregarProfesor(
             @RequestBody Profesor profesor) {
 
-        Profesor data = profesorService.agregarProfesor(profesor);
+        ResponseGeneral<Profesor> response = new ResponseGeneral<>();
+        Profesor data;
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        try {
+
+            data = profesorService.agregarProfesor(profesor);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("No es posible agregar al profesor");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Profesor agregado con exito");
+                response.setSuccess(true);
+            }
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping
-    private ResponseEntity<Profesor> editarProfesor(
+    private ResponseEntity<ResponseGeneral<Profesor>> editarProfesor(
             @RequestBody Profesor profesor) {
 
-        Profesor data = profesorService.editarProfesor(profesor);
+        ResponseGeneral<Profesor> response = new ResponseGeneral<>();
+        Profesor data;
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        try {
+
+            data = profesorService.editarProfesor(profesor);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("No es posible editar al profesor");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Profesor editado con exito");
+                response.setSuccess(true);
+            }
+
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping
-    private ResponseEntity<Boolean> eliminarProfesor(
-            @RequestBody Profesor profesor){
+    private ResponseEntity<ResponseGeneral<Boolean>> eliminarProfesor(
+            @RequestBody Profesor profesor) {
 
-        boolean data = profesorService.eliminarProfesor(profesor);
+        ResponseGeneral<Boolean> response = new ResponseGeneral<>();
+        boolean data;
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        try {
+
+            data = profesorService.eliminarProfesor(profesor);
+
+            if (data == false) {
+                response.setData(null);
+                response.setMessage("No es posible eliminar al profesor");
+                response.setSuccess(false);
+            } else {
+                response.setData(true);
+                response.setMessage("Profesor eliminado con exito");
+                response.setSuccess(true);
+            }
+
+        } catch (Exception e) {
+            response.setData(false);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

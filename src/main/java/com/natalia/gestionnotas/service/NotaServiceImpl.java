@@ -4,11 +4,11 @@ import com.natalia.gestionnotas.dto.NotasDTO;
 import com.natalia.gestionnotas.entity.Nota;
 import com.natalia.gestionnotas.repository.NotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,7 +26,7 @@ public class NotaServiceImpl implements NotaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<NotasDTO> filtrar(String nombre, String apellido, String materia, Pageable pageable) {
+    public Page<NotasDTO> filtrar(String nombre, String apellido, String materia, Pageable pageable) {
 
         if (nombre == null) {
             nombre = "";
@@ -47,7 +47,7 @@ public class NotaServiceImpl implements NotaService {
     @Transactional
     public Nota agregarNota(Nota nota) {
 
-//        Optional<Nota> result = notaRepository.findByEstudianteAndAsignatura();
+//        Optional<Nota> result = notaRepository.findByEstudianteAndAsignatura(nota.getEstudiante().getIdusuario(), nota.getAsignatura().getIdasignatura());
 
 //        if (!result.isPresent()) {
             return notaRepository.save(nota);

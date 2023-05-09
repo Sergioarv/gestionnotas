@@ -30,11 +30,10 @@ public class AsignaturaServiceImpl implements AsignaturaService {
     public Page<Asignatura> filtrar(String nombre, PageRequest pageable) {
 
         if (nombre == null) {
-            return asignaturaRepository.findAll(pageable);
-        } else {
-            return asignaturaRepository.filtrarP(nombre, pageable);
+            nombre = "";
         }
 
+        return asignaturaRepository.filtrarP(nombre, pageable);
     }
 
     @Override
@@ -45,13 +44,14 @@ public class AsignaturaServiceImpl implements AsignaturaService {
 
         if (!result.isPresent()) {
             return asignaturaRepository.save(asignatura);
+        } else {
+            throw new RuntimeException("El nombre de la asignatura ya existe");
         }
-
-        return null;
 
     }
 
     @Override
+    @Transactional
     public Asignatura editarAsignatura(Asignatura asignatura) {
 
         Optional<Asignatura> result = asignaturaRepository.findById(asignatura.getIdasignatura());
@@ -61,7 +61,11 @@ public class AsignaturaServiceImpl implements AsignaturaService {
 
             if (!result2.isPresent()) {
                 asignaturaRepository.save(asignatura);
+            } else {
+                throw new RuntimeException("El nuevo nombre de la asignatura ya existe");
             }
+        } else {
+            throw new RuntimeException("La asignatura que intenta editar no existe");
         }
 
         return null;
@@ -69,12 +73,15 @@ public class AsignaturaServiceImpl implements AsignaturaService {
     }
 
     @Override
+    @Transactional
     public boolean eliminarAsignatura(Asignatura asignatura) {
 
         Optional<Asignatura> result = asignaturaRepository.findById(asignatura.getIdasignatura());
 
         if (result.isPresent()) {
             asignaturaRepository.delete(asignatura);
+        } else {
+            throw new RuntimeException("La asignatura que intenta eliminar no existe");
         }
 
         return false;

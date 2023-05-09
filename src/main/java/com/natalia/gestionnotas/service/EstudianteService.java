@@ -3,6 +3,7 @@ package com.natalia.gestionnotas.service;
 import com.natalia.gestionnotas.entity.Estudiante;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 /**
  * @Project gestionnotas
@@ -12,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
  **/
 public interface EstudianteService {
 
-    public Page<Estudiante> filtrar(String nombre, String apellido, PageRequest pageable);
+    public Page<Estudiante> filtrar(String nombre, String apellido, Pageable pageable);
 
     Estudiante agregarEstudiante(Estudiante estudiante);
 

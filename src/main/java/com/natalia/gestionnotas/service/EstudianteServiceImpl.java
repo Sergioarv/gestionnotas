@@ -6,6 +6,7 @@ import com.natalia.gestionnotas.repository.EstudianteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +27,8 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Estudiante> filtrar(String nombre, String apellido, PageRequest pageable) {
+    public Page<Estudiante> filtrar(String nombre, String apellido, Pageable pageable) {
 
-        if(nombre == null && apellido == null){
-            return estudianteRepository.findAll(pageable);
-        }else {
             if (nombre == null) {
                 nombre = "";
             }
@@ -40,7 +38,6 @@ public class EstudianteServiceImpl implements EstudianteService {
             }
 
             return estudianteRepository.filtrarP(nombre, apellido, pageable);
-        }
     }
 
     @Override
@@ -51,34 +48,47 @@ public class EstudianteServiceImpl implements EstudianteService {
 //        roles.add(rolService.getByRolNombre(RolNombre.ROLE_ESTUDIANTE).get());
 //        estudiante.setRoles(roles);
 
-        Optional<Profesor> result = estudianteRepository.findAllByCorreo(estudiante);
+        Optional<Estudiante> result = estudianteRepository.findByCorreo(estudiante.getCorreo());
 
-        if(!result.isPresent()){
+        if (!result.isPresent()) {
             return estudianteRepository.save(estudiante);
+        } else {
+            throw new RuntimeException("El correo del estudiante ya existe");
         }
 
-        return null;
     }
 
     @Override
+    @Transactional
     public Estudiante editarEstudiante(Estudiante estudiante) {
 
         Optional<Estudiante> result = estudianteRepository.findById(estudiante.getIdusuario());
 
-        if(result.isPresent()){
-            estudianteRepository.save(estudiante);
+        if (result.isPresent()) {
+            Optional<Estudiante> result2 = estudianteRepository.findByCorreo(estudiante.getCorreo());
+
+            if (!result2.isPresent()) {
+                estudianteRepository.save(estudiante);
+            } else {
+                throw new RuntimeException("El correo el estudiante a editar ya existe");
+            }
+        } else {
+            throw new RuntimeException("El estudiante a editar no existe");
         }
 
         return null;
     }
 
     @Override
+    @Transactional
     public boolean eliminarEstudiante(Estudiante estudiante) {
 
         Optional<Estudiante> result = estudianteRepository.findById(estudiante.getIdusuario());
 
-        if(result.isPresent()){
+        if (result.isPresent()) {
             estudianteRepository.delete(estudiante);
+        } else {
+            throw new RuntimeException("El estudiante que intenta eliminar no existe");
         }
 
         return false;

@@ -60,5 +60,4 @@ public class Nota implements Serializable {
         this.asignatura = asignatura;
     }
 
-
 }

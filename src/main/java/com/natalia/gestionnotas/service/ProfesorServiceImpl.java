@@ -27,19 +27,16 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Transactional(readOnly = true)
     public Page<Profesor> filtrar(String nombre, String apellido, PageRequest pageable) {
 
-        if(nombre == null && apellido == null){
-        return profesorRepository.findAll(pageable);
-        }else{
-            if(nombre == null){
-                nombre = "";
-            }
-
-            if(apellido == null){
-                apellido = "";
-            }
-
-            return profesorRepository.filtrarP(nombre, apellido, pageable);
+        if (nombre == null) {
+            nombre = "";
         }
+
+        if (apellido == null) {
+            apellido = "";
+        }
+
+        return profesorRepository.filtrarP(nombre, apellido, pageable);
+
     }
 
     @Override
@@ -48,11 +45,12 @@ public class ProfesorServiceImpl implements ProfesorService {
 
         Optional<Profesor> result = profesorRepository.findByCorreo(profesor.getCorreo());
 
-        if(!result.isPresent()){
+        if (!result.isPresent()) {
             return profesorRepository.save(profesor);
+        } else {
+            throw new RuntimeException("El correo del profesor ya existe");
         }
 
-        return null;
     }
 
     @Override
@@ -61,24 +59,30 @@ public class ProfesorServiceImpl implements ProfesorService {
 
         Optional<Profesor> result = profesorRepository.findById(profesor.getIdusuario());
 
-        if(result.isPresent()) {
+        if (result.isPresent()) {
             Optional<Profesor> result2 = profesorRepository.findByCorreo(profesor.getCorreo());
 
             if (!result2.isPresent()) {
                 profesorRepository.save(profesor);
+            } else {
+                throw new RuntimeException("El correo el profesor a editar ya existe");
             }
+        } else {
+            throw new RuntimeException("El profesor a editar no existe");
         }
-
         return null;
     }
 
     @Override
+    @Transactional
     public boolean eliminarProfesor(Profesor profesor) {
 
         Optional<Profesor> result = profesorRepository.findById(profesor.getIdusuario());
 
-        if(result.isPresent()){
+        if (result.isPresent()) {
             profesorRepository.delete(profesor);
+        } else {
+            throw new RuntimeException("El profesor que intenta eliminar no existe");
         }
 
         return false;

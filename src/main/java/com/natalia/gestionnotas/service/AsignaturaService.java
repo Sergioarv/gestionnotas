@@ -14,7 +14,7 @@ public interface AsignaturaService {
 
     Page<Asignatura> filtrar(String nombre, PageRequest pageable);
 
-    Asignatura agregarAsignatura(Asignatura asignatura);
+    Asignatura agregarAsignatura(Asignatura asignatura) throws Exception;
 
     Asignatura editarAsignatura(Asignatura asignatura);
 
