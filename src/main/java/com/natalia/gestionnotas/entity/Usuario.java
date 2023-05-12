@@ -1,8 +1,8 @@
 package com.natalia.gestionnotas.entity;
 
 
-import jakarta.persistence.*;
-
+import com.natalia.gestionnotas.security.entity.Rol;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +35,7 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     private String contrasenia;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "idusuario", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "idrol", nullable = false))
     private Set<Rol> roles = new HashSet<>();

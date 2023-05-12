@@ -1,7 +1,7 @@
-package com.natalia.gestionnotas.entity;
+package com.natalia.gestionnotas.security.entity;
 
 import com.natalia.gestionnotas.security.enums.RolNombre;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 
 /**
@@ -19,7 +19,7 @@ public class Rol {
     private int idrol;
 
     @Enumerated(EnumType.STRING)
-    private RolNombre rolnombre;
+    private RolNombre rolNombre;
 
     /**
      *  COnstructor
@@ -29,7 +29,7 @@ public class Rol {
     }
 
     public Rol(RolNombre rolnombre) {
-        this.rolnombre = rolnombre;
+        this.rolNombre = rolnombre;
     }
 
     /**
@@ -44,11 +44,11 @@ public class Rol {
         this.idrol = idrol;
     }
 
-    public RolNombre getRolnombre() {
-        return rolnombre;
+    public RolNombre getRolNombre() {
+        return rolNombre;
     }
 
-    public void setRolnombre(RolNombre rolnombre) {
-        this.rolnombre = rolnombre;
+    public void setRolNombre(RolNombre rolNombre) {
+        this.rolNombre = rolNombre;
     }
 }
