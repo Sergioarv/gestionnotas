@@ -20,7 +20,7 @@ public class Nota implements Serializable {
     private int idnota;
 
     @Column(name = "calificacion")
-    private String calificacion;
+    private float calificacion;
 
     @ManyToOne
     @JoinColumn(name = "idusuario")
@@ -39,7 +39,7 @@ public class Nota implements Serializable {
         return idnota;
     }
 
-    public String getCalificacion() {
+    public float getCalificacion() {
         return calificacion;
     }
 
@@ -47,7 +47,7 @@ public class Nota implements Serializable {
         this.idnota = idnota;
     }
 
-    public void setCalificacion(String calificacion) {
+    public void setCalificacion(float calificacion) {
         this.calificacion = calificacion;
     }
 

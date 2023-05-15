@@ -23,10 +23,6 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
 
     Optional<Nota> findByEstudianteAndAsignatura(int estudiante, int asignatura);
 
-    @Query(value = "select u.nombre, u.apellido, u.correo, a.nombre as materia, n.calificacion from nota n inner join usuario u on n.idusuario = u.idusuario inner join asignatura a on n.idasignatura = a.idasignatura;", nativeQuery = true)
-    List<NotasDTO> filtrar();
-
-    @Query(value = "select * from (select  u.idusuario, a.idasignatura, u.nombre, u.apellido, u.correo, a.nombre as materia, n.calificacion from nota n inner join usuario u on n.idusuario = u.idusuario inner join asignatura a on n.idasignatura = a.idasignatura) c1 where lower(c1.nombre) like lower(concat('%',:nombre,'%')) and lower(c1.apellido) like lower(concat('%',:apellido,'%')) and lower(c1.materia) like lower(concat('%',:materia,'%'));", nativeQuery = true)
+    @Query(value = "select * from (select u.idusuario, u.nombre, u.apellido, u.correo, n.calificacion, a.nombre as materia, a.idasignatura from nota as n inner join usuario as u on u.idusuario = n.idusuario inner join asignatura as a on a.idasignatura = n.idasignatura) c1 where lower(c1.nombre) like lower(concat('%',:nombre,'%')) and lower(c1.apellido) like lower(concat('%',:apellido,'%')) and lower(c1.materia) like lower(concat('%',:materia,'%'))", nativeQuery = true)
     Page<NotasDTO> filtrarNAM(String nombre, String apellido, String materia, Pageable pageable);
-
 }
