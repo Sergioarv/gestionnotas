@@ -2,13 +2,18 @@ package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Profesor;
 import com.natalia.gestionnotas.repository.ProfesorRepository;
+import com.natalia.gestionnotas.security.entity.Rol;
+import com.natalia.gestionnotas.security.enums.RolNombre;
+import com.natalia.gestionnotas.security.service.RolServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @Project gestionnotas
@@ -22,6 +27,9 @@ public class ProfesorServiceImpl implements ProfesorService {
 
     @Autowired
     private ProfesorRepository profesorRepository;
+
+    @Autowired
+    RolServiceImpl rolService;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,6 +54,9 @@ public class ProfesorServiceImpl implements ProfesorService {
         Optional<Profesor> result = profesorRepository.findByCorreo(profesor.getCorreo());
 
         if (!result.isPresent()) {
+            Set<Rol> roles = new HashSet<>();
+            roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
+            profesor.setRoles(roles);
             return profesorRepository.save(profesor);
         } else {
             throw new RuntimeException("El correo del profesor ya existe");

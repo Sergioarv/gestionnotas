@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,6 +25,9 @@ public class ProfesorController {
 
     @Autowired
     private ProfesorService profesorService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @GetMapping("/filtrar")
     public ResponseEntity<ResponseGeneral<Page<Profesor>>> filtrar(
@@ -75,7 +79,7 @@ public class ProfesorController {
         Profesor data;
 
         try {
-
+            profesor.setContrasenia(passwordEncoder.encode(profesor.getContrasenia()));
             data = profesorService.agregarProfesor(profesor);
 
             if (data == null) {
@@ -104,7 +108,7 @@ public class ProfesorController {
         Profesor data;
 
         try {
-
+            profesor.setContrasenia(passwordEncoder.encode(profesor.getContrasenia()));
             data = profesorService.editarProfesor(profesor);
 
             if (data == null) {

@@ -8,6 +8,7 @@ package com.natalia.gestionnotas.dto;
  **/
 public interface NotasDTO {
 
+    int getIdnota();
     int getIdusuario();
     int getIdasignatura();
     String getNombre();

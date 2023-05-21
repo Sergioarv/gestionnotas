@@ -3,6 +3,9 @@ package com.natalia.gestionnotas.service;
 import com.natalia.gestionnotas.entity.Estudiante;
 import com.natalia.gestionnotas.entity.Profesor;
 import com.natalia.gestionnotas.repository.EstudianteRepository;
+import com.natalia.gestionnotas.security.entity.Rol;
+import com.natalia.gestionnotas.security.enums.RolNombre;
+import com.natalia.gestionnotas.security.service.RolServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @Project gestionnotas
@@ -24,6 +29,9 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Autowired
     private EstudianteRepository estudianteRepository;
+
+    @Autowired
+    private RolServiceImpl rolService;
 
     @Override
     @Transactional(readOnly = true)
@@ -44,13 +52,12 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Transactional
     public Estudiante agregarEstudiante(Estudiante estudiante) {
 
-//        Set<Rol> roles = new HashSet<>();
-//        roles.add(rolService.getByRolNombre(RolNombre.ROLE_ESTUDIANTE).get());
-//        estudiante.setRoles(roles);
-
         Optional<Estudiante> result = estudianteRepository.findByCorreo(estudiante.getCorreo());
 
         if (!result.isPresent()) {
+            Set<Rol> roles = new HashSet<>();
+            roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
+            estudiante.setRoles(roles);
             return estudianteRepository.save(estudiante);
         } else {
             throw new RuntimeException("El correo del estudiante ya existe");
