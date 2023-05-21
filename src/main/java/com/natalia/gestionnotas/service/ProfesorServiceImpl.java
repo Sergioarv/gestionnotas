@@ -74,14 +74,17 @@ public class ProfesorServiceImpl implements ProfesorService {
             Optional<Profesor> result2 = profesorRepository.findByCorreo(profesor.getCorreo());
 
             if (!result2.isPresent()) {
-                profesorRepository.save(profesor);
+                return profesorRepository.save(profesor);
             } else {
-                throw new RuntimeException("El correo el profesor a editar ya existe");
+                if(result2.get().getIdusuario() == profesor.getIdusuario()){
+                    return profesorRepository.save(profesor);
+                }else {
+                    throw new RuntimeException("El correo el profesor a editar ya existe");
+                }
             }
         } else {
             throw new RuntimeException("El profesor a editar no existe");
         }
-        return null;
     }
 
     @Override

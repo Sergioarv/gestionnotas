@@ -37,15 +37,15 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Transactional(readOnly = true)
     public Page<Estudiante> filtrar(String nombre, String apellido, Pageable pageable) {
 
-            if (nombre == null) {
-                nombre = "";
-            }
+        if (nombre == null) {
+            nombre = "";
+        }
 
-            if (apellido == null) {
-                apellido = "";
-            }
+        if (apellido == null) {
+            apellido = "";
+        }
 
-            return estudianteRepository.filtrarP(nombre, apellido, pageable);
+        return estudianteRepository.filtrarP(nombre, apellido, pageable);
     }
 
     @Override
@@ -75,15 +75,16 @@ public class EstudianteServiceImpl implements EstudianteService {
             Optional<Estudiante> result2 = estudianteRepository.findByCorreo(estudiante.getCorreo());
 
             if (!result2.isPresent()) {
-                estudianteRepository.save(estudiante);
+                return estudianteRepository.save(estudiante);
             } else {
+                if (result2.get().getIdusuario() == estudiante.getIdusuario()) {
+                    return estudianteRepository.save(estudiante);
+                }
                 throw new RuntimeException("El correo el estudiante a editar ya existe");
             }
         } else {
             throw new RuntimeException("El estudiante a editar no existe");
         }
-
-        return null;
     }
 
     @Override
