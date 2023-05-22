@@ -1,6 +1,9 @@
 package com.natalia.gestionnotas.service;
 
+import com.natalia.gestionnotas.dto.AsignaturaDTO;
+import com.natalia.gestionnotas.entity.Asignatura;
 import com.natalia.gestionnotas.entity.Profesor;
+import com.natalia.gestionnotas.repository.AsignaturaRepository;
 import com.natalia.gestionnotas.repository.ProfesorRepository;
 import com.natalia.gestionnotas.security.entity.Rol;
 import com.natalia.gestionnotas.security.enums.RolNombre;
@@ -11,9 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Project gestionnotas
@@ -27,6 +28,9 @@ public class ProfesorServiceImpl implements ProfesorService {
 
     @Autowired
     private ProfesorRepository profesorRepository;
+
+    @Autowired
+    private AsignaturaRepository asignaturaRepository;
 
     @Autowired
     RolServiceImpl rolService;
@@ -52,13 +56,53 @@ public class ProfesorServiceImpl implements ProfesorService {
     public Profesor agregarProfesor(Profesor profesor) {
 
         Optional<Profesor> result = profesorRepository.findByCorreo(profesor.getCorreo());
+        List<Asignatura> asigGuardadas = new ArrayList<>();
+        List<Asignatura> asignaturaG = new ArrayList<>();
+        List<Asignatura> asigRemover = new ArrayList<>();
+        Profesor profesorG = new Profesor();
 
         if (!result.isPresent()) {
             Set<Rol> roles = new HashSet<>();
-            roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
+            roles.add(rolService.getByRolNombre(RolNombre.ROLE_DOCENTE).get());
             profesor.setRoles(roles);
 
+            asigGuardadas = profesor.getAsignaturas();
+            profesor.setAsignaturas(null);
+
+            profesorG = profesorRepository.save(profesor);
+
+            for (Asignatura a : asigGuardadas) {
+                Optional<Asignatura> asigR;
+                Optional<AsignaturaDTO> dto = asignaturaRepository.DtoId(a.getIdasignatura());
+                asigR = asignaturaRepository.findById(a.getIdasignatura());
+
+                if(asigR.isPresent()) {
+                    if(dto.get().getIdusuario() == null) {
+                        a.setNombre(asigR.get().getNombre());
+                        a.setNotas(asigR.get().getNotas());
+                        a.setProfesor(profesorG);
+                    }else if (Integer.parseInt(dto.get().getIdusuario()) == profesorG.getIdusuario()){
+                        a.setNombre(asigR.get().getNombre());
+                        a.setNotas(asigR.get().getNotas());
+                        a.setProfesor(profesorG);
+                    }else{
+                        asigRemover.add(a);
+                    }
+                }
+            }
+
+            if(asigRemover.size() != 0){
+                for (Asignatura a : asigRemover) {
+                    if (asigGuardadas.contains(a)) asigGuardadas.remove(a);
+                }
+            }
+
+            asignaturaG = asignaturaRepository.saveAll(asigGuardadas);
+
+            profesor.setAsignaturas(asignaturaG);
+
             return profesorRepository.save(profesor);
+
         } else {
             throw new RuntimeException("El correo del profesor ya existe");
         }
@@ -95,6 +139,10 @@ public class ProfesorServiceImpl implements ProfesorService {
         Optional<Profesor> result = profesorRepository.findById(profesor.getIdusuario());
 
         if (result.isPresent()) {
+            for (Asignatura a : result.get().getAsignaturas()){
+                a.setProfesor(null);
+            }
+            asignaturaRepository.saveAll(result.get().getAsignaturas());
             profesorRepository.delete(profesor);
             return true;
         } else {

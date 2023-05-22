@@ -1,5 +1,6 @@
 package com.natalia.gestionnotas.repository;
 
+import com.natalia.gestionnotas.dto.AsignaturaDTO;
 import com.natalia.gestionnotas.entity.Asignatura;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +24,7 @@ public interface AsignaturaRepository extends JpaRepository<Asignatura, Integer>
     Page<Asignatura> filtrarP(String nombre, Pageable pageable);
 
     Optional<Asignatura> findByNombre(String asignatura);
+
+    @Query(value = "select * from asignatura where idasignatura = :idasignatura",nativeQuery = true)
+    Optional<AsignaturaDTO> DtoId(int idasignatura);
 }
