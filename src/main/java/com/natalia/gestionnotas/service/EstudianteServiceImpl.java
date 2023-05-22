@@ -95,11 +95,9 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         if (result.isPresent()) {
             estudianteRepository.delete(estudiante);
+            return true;
         } else {
             throw new RuntimeException("El estudiante que intenta eliminar no existe");
         }
-
-        return false;
-
     }
 }

@@ -57,6 +57,7 @@ public class ProfesorServiceImpl implements ProfesorService {
             Set<Rol> roles = new HashSet<>();
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
             profesor.setRoles(roles);
+
             return profesorRepository.save(profesor);
         } else {
             throw new RuntimeException("El correo del profesor ya existe");
@@ -95,10 +96,9 @@ public class ProfesorServiceImpl implements ProfesorService {
 
         if (result.isPresent()) {
             profesorRepository.delete(profesor);
+            return true;
         } else {
             throw new RuntimeException("El profesor que intenta eliminar no existe");
         }
-
-        return false;
     }
 }

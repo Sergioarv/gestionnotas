@@ -1,8 +1,6 @@
 package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Asignatura;
-import com.natalia.gestionnotas.entity.Estudiante;
-import com.natalia.gestionnotas.entity.Profesor;
 import com.natalia.gestionnotas.repository.AsignaturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,7 +45,6 @@ public class AsignaturaServiceImpl implements AsignaturaService {
         } else {
             throw new RuntimeException("El nombre de la asignatura ya existe");
         }
-
     }
 
     @Override
@@ -60,31 +57,34 @@ public class AsignaturaServiceImpl implements AsignaturaService {
             Optional<Asignatura> result2 = asignaturaRepository.findByNombre(asignatura.getNombre());
 
             if (!result2.isPresent()) {
-                asignaturaRepository.save(asignatura);
+                return asignaturaRepository.save(asignatura);
             } else {
+                if (result2.get().getIdasignatura() == asignatura.getIdasignatura()) {
+                    return asignaturaRepository.save(asignatura);
+                }
                 throw new RuntimeException("El nuevo nombre de la asignatura ya existe");
             }
         } else {
             throw new RuntimeException("La asignatura que intenta editar no existe");
         }
-
-        return null;
-
     }
 
     @Override
     @Transactional
     public boolean eliminarAsignatura(Asignatura asignatura) {
 
-        Optional<Asignatura> result = asignaturaRepository.findById(asignatura.getIdasignatura());
+        try {
+            Optional<Asignatura> result = asignaturaRepository.findById(asignatura.getIdasignatura());
 
-        if (result.isPresent()) {
-            asignaturaRepository.delete(asignatura);
-        } else {
-            throw new RuntimeException("La asignatura que intenta eliminar no existe");
+            if (result.isPresent()) {
+                asignaturaRepository.delete(asignatura);
+                return true;
+            } else {
+                throw new RuntimeException("La asignatura que intenta eliminar no existe");
+            }
+        } catch (Exception ce) {
+            throw new RuntimeException("No se puede eliminar la asignatura ya que un profesor tiene asignada esta materia");
         }
-
-        return false;
     }
 
 
