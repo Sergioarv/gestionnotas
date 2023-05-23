@@ -3,6 +3,7 @@ package com.natalia.gestionnotas.service;
 import com.natalia.gestionnotas.entity.Estudiante;
 import com.natalia.gestionnotas.entity.Profesor;
 import com.natalia.gestionnotas.repository.EstudianteRepository;
+import com.natalia.gestionnotas.repository.ProfesorRepository;
 import com.natalia.gestionnotas.security.entity.Rol;
 import com.natalia.gestionnotas.security.enums.RolNombre;
 import com.natalia.gestionnotas.security.service.RolServiceImpl;
@@ -32,6 +33,8 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Autowired
     private RolServiceImpl rolService;
+    @Autowired
+    private ProfesorRepository profesorRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -52,11 +55,12 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Transactional
     public Estudiante agregarEstudiante(Estudiante estudiante) {
 
-        Optional<Estudiante> result = estudianteRepository.findByCorreo(estudiante.getCorreo());
+        Optional<Estudiante> resultE = estudianteRepository.findByCorreo(estudiante.getCorreo());
+        Optional<Profesor> resultP = profesorRepository.findByCorreo(estudiante.getCorreo());
 
-        if (!result.isPresent()) {
+        if (!resultE.isPresent() && !resultP.isPresent()) {
             Set<Rol> roles = new HashSet<>();
-            roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
+            roles.add(rolService.getByRolNombre(RolNombre.ROLE_ESTUDIANTE).get());
             estudiante.setRoles(roles);
             return estudianteRepository.save(estudiante);
         } else {
@@ -72,14 +76,17 @@ public class EstudianteServiceImpl implements EstudianteService {
         Optional<Estudiante> result = estudianteRepository.findById(estudiante.getIdusuario());
 
         if (result.isPresent()) {
-            Optional<Estudiante> result2 = estudianteRepository.findByCorreo(estudiante.getCorreo());
+            Optional<Estudiante> resultE = estudianteRepository.findByCorreo(estudiante.getCorreo());
+            Optional<Profesor> resultP = profesorRepository.findByCorreo(estudiante.getCorreo());
 
-            if (!result2.isPresent()) {
+            if (!resultE.isPresent() && !resultP.isPresent()) {
                 return estudianteRepository.save(estudiante);
-            } else {
-                if (result2.get().getIdusuario() == estudiante.getIdusuario()) {
+            } else if(resultE.isPresent()){
+                if (resultE.get().getIdusuario() == estudiante.getIdusuario()) {
                     return estudianteRepository.save(estudiante);
                 }
+                throw new RuntimeException("El correo el estudiante a editar ya existe");
+            }else{
                 throw new RuntimeException("El correo el estudiante a editar ya existe");
             }
         } else {

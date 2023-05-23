@@ -76,22 +76,22 @@ public class ProfesorServiceImpl implements ProfesorService {
                 Optional<AsignaturaDTO> dto = asignaturaRepository.DtoId(a.getIdasignatura());
                 asigR = asignaturaRepository.findById(a.getIdasignatura());
 
-                if(asigR.isPresent()) {
-                    if(dto.get().getIdusuario() == null) {
+                if (asigR.isPresent()) {
+                    if (dto.get().getIdusuario() == null) {
                         a.setNombre(asigR.get().getNombre());
                         a.setNotas(asigR.get().getNotas());
                         a.setProfesor(profesorG);
-                    }else if (Integer.parseInt(dto.get().getIdusuario()) == profesorG.getIdusuario()){
+                    } else if (Integer.parseInt(dto.get().getIdusuario()) == profesorG.getIdusuario()) {
                         a.setNombre(asigR.get().getNombre());
                         a.setNotas(asigR.get().getNotas());
                         a.setProfesor(profesorG);
-                    }else{
+                    } else {
                         asigRemover.add(a);
                     }
                 }
             }
 
-            if(asigRemover.size() != 0){
+            if (asigRemover.size() != 0) {
                 for (Asignatura a : asigRemover) {
                     if (asigGuardadas.contains(a)) asigGuardadas.remove(a);
                 }
@@ -114,18 +114,66 @@ public class ProfesorServiceImpl implements ProfesorService {
     public Profesor editarProfesor(Profesor profesor) {
 
         Optional<Profesor> result = profesorRepository.findById(profesor.getIdusuario());
+        List<Asignatura> asigGuardadas = new ArrayList<>();
+        List<Asignatura> asignaturaG = new ArrayList<>();
+        List<Asignatura> asigRemover = new ArrayList<>();
+        List<Asignatura> asigAnteriores = new ArrayList<>();
+        List<Asignatura> asigOriginal = new ArrayList<>();
+        Profesor profesorG = new Profesor();
 
         if (result.isPresent()) {
             Optional<Profesor> result2 = profesorRepository.findByCorreo(profesor.getCorreo());
+            asigOriginal = result.get().getAsignaturas();
 
-            if (!result2.isPresent()) {
-                return profesorRepository.save(profesor);
+            if (result2.isPresent() && result2.get().getIdusuario() != profesor.getIdusuario()) {
+                throw new RuntimeException("El correo el profesor a editar ya existe");
             } else {
-                if(result2.get().getIdusuario() == profesor.getIdusuario()){
-                    return profesorRepository.save(profesor);
-                }else {
-                    throw new RuntimeException("El correo el profesor a editar ya existe");
+
+                asigGuardadas = profesor.getAsignaturas();
+                profesor.setAsignaturas(null);
+                profesorG = profesorRepository.save(profesor);
+
+                for (Asignatura a : asigGuardadas) {
+                    Optional<Asignatura> asigR;
+                    Optional<AsignaturaDTO> dto = asignaturaRepository.DtoId(a.getIdasignatura());
+                    asigR = asignaturaRepository.findById(a.getIdasignatura());
+
+                    if (asigR.isPresent()) {
+                        if (dto.get().getIdusuario() == null) {
+                            a.setNombre(asigR.get().getNombre());
+                            a.setNotas(asigR.get().getNotas());
+                            a.setProfesor(profesorG);
+                        } else if (Integer.parseInt(dto.get().getIdusuario()) == profesorG.getIdusuario()) {
+                            a.setNombre(asigR.get().getNombre());
+                            a.setNotas(asigR.get().getNotas());
+                            a.setProfesor(profesorG);
+                        } else {
+                            asigRemover.add(a);
+                        }
+                    }
                 }
+
+                if (asigRemover.size() != 0) {
+                    for (Asignatura a : asigRemover) {
+                        if (asigGuardadas.contains(a)) asigGuardadas.remove(a);
+                    }
+                }
+
+                if (asigOriginal != null) {
+                    for (Asignatura a : asigOriginal) {
+                        if (!asigGuardadas.contains(a)) {
+                            a.setProfesor(null);
+                            asigAnteriores.add(a);
+                        }
+                    }
+                }
+                asignaturaRepository.saveAll(asigAnteriores);
+
+                asignaturaG = asignaturaRepository.saveAll(asigGuardadas);
+
+                profesor.setAsignaturas(asignaturaG);
+
+                return profesorRepository.save(profesor);
             }
         } else {
             throw new RuntimeException("El profesor a editar no existe");
@@ -139,7 +187,7 @@ public class ProfesorServiceImpl implements ProfesorService {
         Optional<Profesor> result = profesorRepository.findById(profesor.getIdusuario());
 
         if (result.isPresent()) {
-            for (Asignatura a : result.get().getAsignaturas()){
+            for (Asignatura a : result.get().getAsignaturas()) {
                 a.setProfesor(null);
             }
             asignaturaRepository.saveAll(result.get().getAsignaturas());

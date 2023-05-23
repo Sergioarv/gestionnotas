@@ -12,7 +12,7 @@ import java.util.List;
  **/
 
 @Entity
-@PrimaryKeyJoinColumn(name = "idusuario")
+//@PrimaryKeyJoinColumn(name = "idusuario")
 public class Profesor extends Usuario{
 
     @OneToMany(mappedBy = "profesor", cascade=CascadeType.ALL)

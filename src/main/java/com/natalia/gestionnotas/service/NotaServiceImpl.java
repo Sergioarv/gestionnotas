@@ -46,14 +46,7 @@ public class NotaServiceImpl implements NotaService {
     @Override
     @Transactional
     public Nota agregarNota(Nota nota) {
-
-//        Optional<Nota> result = notaRepository.findByEstudianteAndAsignatura(nota.getEstudiante().getIdusuario(), nota.getAsignatura().getIdasignatura());
-
-//        if (!result.isPresent()) {
-            return notaRepository.save(nota);
-//        }
-
-//        return null;
+        return notaRepository.save(nota);
     }
 
     @Override
@@ -63,6 +56,7 @@ public class NotaServiceImpl implements NotaService {
         Optional<Nota> result = notaRepository.findById(nota.getIdnota());
 
         if (result.isPresent()) {
+
             return notaRepository.save(nota);
         }
 
@@ -77,9 +71,10 @@ public class NotaServiceImpl implements NotaService {
 
         if (result.isPresent()) {
             notaRepository.delete(nota);
+            return true;
         }
 
-        return null;
+        return false;
     }
 
 }

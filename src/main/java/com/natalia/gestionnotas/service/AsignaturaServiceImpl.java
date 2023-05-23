@@ -1,5 +1,6 @@
 package com.natalia.gestionnotas.service;
 
+import com.natalia.gestionnotas.dto.AsignaturaDTO;
 import com.natalia.gestionnotas.entity.Asignatura;
 import com.natalia.gestionnotas.repository.AsignaturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +55,21 @@ public class AsignaturaServiceImpl implements AsignaturaService {
         Optional<Asignatura> result = asignaturaRepository.findById(asignatura.getIdasignatura());
 
         if (result.isPresent()) {
+            Optional<AsignaturaDTO> dto = asignaturaRepository.DtoId(asignatura.getIdasignatura());
             Optional<Asignatura> result2 = asignaturaRepository.findByNombre(asignatura.getNombre());
-
             if (!result2.isPresent()) {
-                return asignaturaRepository.save(asignatura);
+                if(dto.get().getIdusuario() == null) {
+                    return asignaturaRepository.save(asignatura);
+                }else{
+                    throw new RuntimeException("La asignatura ya tiene un docente y no puede cambiarse su nombre");
+                }
             } else {
                 if (result2.get().getIdasignatura() == asignatura.getIdasignatura()) {
-                    return asignaturaRepository.save(asignatura);
+                    if(dto.get().getIdusuario() == null) {
+                        return asignaturaRepository.save(asignatura);
+                    }else{
+                        throw new RuntimeException("La asignatura ya tiene un docente y no puede cambiarse su nombre");
+                    }
                 }
                 throw new RuntimeException("El nuevo nombre de la asignatura ya existe");
             }
@@ -77,8 +86,13 @@ public class AsignaturaServiceImpl implements AsignaturaService {
             Optional<Asignatura> result = asignaturaRepository.findById(asignatura.getIdasignatura());
 
             if (result.isPresent()) {
-                asignaturaRepository.delete(asignatura);
-                return true;
+                Optional<AsignaturaDTO> dto = asignaturaRepository.DtoId(asignatura.getIdasignatura());
+                if(dto.get().getIdusuario() == null) {
+                    asignaturaRepository.delete(asignatura);
+                    return true;
+                }else{
+                    throw new RuntimeException();
+                }
             } else {
                 throw new RuntimeException("La asignatura que intenta eliminar no existe");
             }

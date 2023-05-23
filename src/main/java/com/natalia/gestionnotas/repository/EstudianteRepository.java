@@ -23,8 +23,10 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
     @Query(value = "select e from Estudiante e")
     List<Estudiante> filtrar();
 
-    @Query(value = "select * from usuario where lower(nombre) like lower(concat('%',:nombre,'%')) and lower(apellido) like lower(concat('%',:apellido,'%'))", nativeQuery = true)
+    @Query(value = "select * from estudiante where lower(nombre) like lower(concat('%',:nombre,'%')) and lower(apellido) like lower(concat('%',:apellido,'%'))", nativeQuery = true)
     Page<Estudiante> filtrarP(String nombre, String apellido, Pageable pageable);
 
     Optional<Estudiante> findByCorreo(String estudiante);
+
+    boolean existsByCorreo(String correo);
 }

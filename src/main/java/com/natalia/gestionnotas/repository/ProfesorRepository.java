@@ -24,8 +24,9 @@ public interface ProfesorRepository extends JpaRepository<Profesor, Integer> {
 
     Optional<Profesor> findByCorreo(String profesor);
 
-    @Query(value = "select * from usuario where lower(nombre) like lower(concat('%',:nombre,'%')) and lower(apellido) like lower(concat('%',:apellido,'%'))", nativeQuery = true)
+    @Query(value = "select * from profesor where lower(nombre) like lower(concat('%',:nombre,'%')) and lower(apellido) like lower(concat('%',:apellido,'%'))", nativeQuery = true)
     Page<Profesor> filtrarP(String nombre, String apellido, Pageable pageable);
 
 
+    boolean existsByCorreo(String correo);
 }

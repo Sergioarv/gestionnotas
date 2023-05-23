@@ -1,6 +1,10 @@
 package com.natalia.gestionnotas.security.service;
 
+import com.natalia.gestionnotas.entity.Estudiante;
+import com.natalia.gestionnotas.entity.Profesor;
 import com.natalia.gestionnotas.entity.Usuario;
+import com.natalia.gestionnotas.repository.EstudianteRepository;
+import com.natalia.gestionnotas.repository.ProfesorRepository;
 import com.natalia.gestionnotas.security.entity.Rol;
 import com.natalia.gestionnotas.security.enums.RolNombre;
 import com.natalia.gestionnotas.security.repository.UsuarioRepository;
@@ -28,17 +32,32 @@ public class UsuarioService {
 
     @Autowired
     private RolServiceImpl rolService;
+    @Autowired
+    private EstudianteRepository estudianteRepository;
+    @Autowired
+    private ProfesorRepository profesorRepository;
 
     public Usuario getByCorreo(String correo) throws Exception {
-        Optional<Usuario> u = usuarioRepository.findByCorreo(correo);
-        if(u.isPresent()){
-            return u.get();
+        Optional<Estudiante> e = estudianteRepository.findByCorreo(correo);
+        Optional<Profesor> p = profesorRepository.findByCorreo(correo);
+        if(e.isPresent()){
+            return e.get();
+        }
+        if(p.isPresent()){
+            return p.get();
         }
         throw new Exception("El usuario no existe");
     }
 
     public boolean existsByCorreo(String correo){
-        return usuarioRepository.existsByCorreo(correo);
+
+        if(estudianteRepository.existsByCorreo(correo)){
+            return true;
+        }
+        if(profesorRepository.existsByCorreo(correo)){
+            return true;
+        }
+        return false;
     }
 
     public Usuario agregarAdministrador(Usuario admin) {

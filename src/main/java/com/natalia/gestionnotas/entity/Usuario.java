@@ -15,12 +15,12 @@ import java.util.Set;
  **/
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Usuario implements Serializable {
 
     @Id
     @Column(name = "idusuario")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int idusuario;
 
     @Column(nullable = false)
