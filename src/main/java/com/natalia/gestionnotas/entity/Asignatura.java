@@ -1,6 +1,8 @@
 package com.natalia.gestionnotas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,17 +27,17 @@ public class Asignatura implements Serializable {
     @Column(name = "nombre")
     private String nombre;
 
-    @OneToMany(mappedBy="asignatura")
+    @OneToMany(mappedBy="asignatura", cascade = CascadeType.ALL)
     private List<Nota> notas = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "idusuario")
+    @JsonIgnore
     private Profesor profesor;
 
     /**
      * Getter y Setter
      **/
-
 
     public int getIdasignatura() {
         return idasignatura;

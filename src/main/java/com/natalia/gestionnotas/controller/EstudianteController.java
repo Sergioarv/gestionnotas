@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
@@ -28,6 +30,32 @@ public class EstudianteController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @GetMapping
+    public ResponseEntity<ResponseGeneral<List<Estudiante>>> listar(){
+        ResponseGeneral<List<Estudiante>> response = new ResponseGeneral<>();
+        List<Estudiante> data;
+
+        data = estudianteService.listar();
+
+        if (data == null) {
+            response.setData(null);
+            response.setMessage("Erro al obtener la lista");
+            response.setSuccess(false);
+        } else {
+            if (data.size() == 0) {
+                response.setData(data);
+                response.setMessage("La lista de estudiantes esta vacia");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Lista de estudiantes obtenida con exito");
+                response.setSuccess(true);
+            }
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping("/filtrar")
     public ResponseEntity<ResponseGeneral<Page<Estudiante>>> filtrar(

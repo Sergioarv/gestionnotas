@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,6 +36,12 @@ public class EstudianteServiceImpl implements EstudianteService {
     private RolServiceImpl rolService;
     @Autowired
     private ProfesorRepository profesorRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Estudiante> listar(){
+        return estudianteRepository.findAll();
+    }
 
     @Override
     @Transactional(readOnly = true)

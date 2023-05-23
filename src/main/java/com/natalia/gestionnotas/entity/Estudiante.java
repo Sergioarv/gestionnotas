@@ -15,7 +15,7 @@ import java.util.List;
 //@PrimaryKeyJoinColumn(name = "idusuario")
 public class Estudiante extends Usuario {
 
-    @OneToMany(mappedBy = "estudiante")
+    @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL)
     private List<Nota> notas = new ArrayList<>();
 
     /**

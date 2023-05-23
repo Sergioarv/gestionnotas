@@ -77,4 +77,10 @@ public class NotaServiceImpl implements NotaService {
         return false;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public NotasDTO verficar(int idusuario, int idasignatura) {
+        return notaRepository.obtenerEstAsig(idusuario, idasignatura);
+    }
+
 }

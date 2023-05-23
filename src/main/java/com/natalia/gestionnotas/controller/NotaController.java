@@ -29,6 +29,29 @@ public class NotaController {
     @Autowired
     private NotaService notaService;
 
+    @GetMapping("/verificar")
+    public ResponseEntity<ResponseGeneral<NotasDTO>> verificar(
+            @RequestParam(value = "idusuario", required = true) int idusuario,
+            @RequestParam(value = "idasignatura", required = true) int idasignatura
+    ){
+        ResponseGeneral<NotasDTO> response = new ResponseGeneral<>();
+        NotasDTO data;
+
+        data = notaService.verficar(idusuario, idasignatura);
+
+        if (data != null) {
+            response.setData(data);
+            response.setMessage("Este usuario ya tiene una nota en la asignatura");
+            response.setSuccess(false);
+        } else {
+            response.setData(null);
+            response.setMessage("Este estudiante aun no tiene nota");
+            response.setSuccess(true);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/filtrar")
     public ResponseEntity<ResponseGeneral<Page<NotasDTO>>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,
@@ -48,7 +71,7 @@ public class NotaController {
 
             if (data == null) {
                 response.setData(null);
-                response.setMessage("Erro al obtener la lista");
+                response.setMessage("Error al obtener la lista");
                 response.setSuccess(false);
             } else {
                 if (data.getContent().size() == 0) {

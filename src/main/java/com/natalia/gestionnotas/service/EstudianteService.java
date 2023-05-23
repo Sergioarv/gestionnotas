@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * @Project gestionnotas
  * @Author Sergio Abelardo Rodríguez Vásquez
@@ -20,4 +22,6 @@ public interface EstudianteService {
     Estudiante editarEstudiante(Estudiante estudiante);
 
     boolean eliminarEstudiante(Estudiante estudiante);
+
+    List<Estudiante> listar();
 }

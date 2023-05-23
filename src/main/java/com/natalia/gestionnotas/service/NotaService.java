@@ -21,4 +21,6 @@ public interface NotaService {
     Nota editarNota(Nota nota);
 
     Boolean eliminarNota(Nota nota);
+
+    NotasDTO verficar(int idusuario, int idasignatura);
 }
