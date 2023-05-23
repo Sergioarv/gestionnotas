@@ -1,8 +1,13 @@
 package com.natalia.gestionnotas.service;
 
+import com.natalia.gestionnotas.dto.NotasDTO;
+import com.natalia.gestionnotas.entity.Asignatura;
 import com.natalia.gestionnotas.entity.Estudiante;
+import com.natalia.gestionnotas.entity.Nota;
 import com.natalia.gestionnotas.entity.Profesor;
+import com.natalia.gestionnotas.repository.AsignaturaRepository;
 import com.natalia.gestionnotas.repository.EstudianteRepository;
+import com.natalia.gestionnotas.repository.NotaRepository;
 import com.natalia.gestionnotas.repository.ProfesorRepository;
 import com.natalia.gestionnotas.security.entity.Rol;
 import com.natalia.gestionnotas.security.enums.RolNombre;
@@ -14,10 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Project gestionnotas
@@ -36,10 +38,14 @@ public class EstudianteServiceImpl implements EstudianteService {
     private RolServiceImpl rolService;
     @Autowired
     private ProfesorRepository profesorRepository;
+    @Autowired
+    private NotaRepository notaRepository;
+    @Autowired
+    private AsignaturaRepository asignaturaRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<Estudiante> listar(){
+    public List<Estudiante> listar() {
         return estudianteRepository.findAll();
     }
 
@@ -69,6 +75,7 @@ public class EstudianteServiceImpl implements EstudianteService {
             Set<Rol> roles = new HashSet<>();
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_ESTUDIANTE).get());
             estudiante.setRoles(roles);
+
             return estudianteRepository.save(estudiante);
         } else {
             throw new RuntimeException("El correo del estudiante ya existe");
@@ -81,24 +88,51 @@ public class EstudianteServiceImpl implements EstudianteService {
     public Estudiante editarEstudiante(Estudiante estudiante) {
 
         Optional<Estudiante> result = estudianteRepository.findById(estudiante.getIdusuario());
+        List<Nota> notasG = new ArrayList<>();
+        List<Nota> notasGuardadas = new ArrayList<>();
+        Estudiante estudianteG = new Estudiante();
 
         if (result.isPresent()) {
             Optional<Estudiante> resultE = estudianteRepository.findByCorreo(estudiante.getCorreo());
             Optional<Profesor> resultP = profesorRepository.findByCorreo(estudiante.getCorreo());
 
+            notasGuardadas = estudiante.getNotas();
+            estudiante.setNotas(null);
+
             if (!resultE.isPresent() && !resultP.isPresent()) {
-                return estudianteRepository.save(estudiante);
-            } else if(resultE.isPresent()){
-                if (resultE.get().getIdusuario() == estudiante.getIdusuario()) {
-                    return estudianteRepository.save(estudiante);
-                }
-                throw new RuntimeException("El correo el estudiante a editar ya existe");
-            }else{
+                estudianteG = estudianteRepository.save(estudiante);
+                notasGuardadas = settearNotas(notasGuardadas, estudianteG);
+            } else if (resultE.isPresent() && resultE.get().getIdusuario() == estudiante.getIdusuario()) {
+                estudianteG = estudianteRepository.save(estudiante);
+                notasGuardadas = settearNotas(notasGuardadas, estudianteG);
+            } else {
                 throw new RuntimeException("El correo el estudiante a editar ya existe");
             }
         } else {
             throw new RuntimeException("El estudiante a editar no existe");
         }
+        notasG = notaRepository.saveAll(notasGuardadas);
+        estudianteG.setNotas(notasG);
+        return estudianteRepository.save(estudianteG);
+    }
+
+    private List<Nota> settearNotas(List<Nota> notasGuardadas, Estudiante estudianteG) {
+
+        for (Nota n : notasGuardadas) {
+            Optional<Nota> notaR;
+            Optional<NotasDTO> dto = notaRepository.dtoId(n.getIdnota());
+            notaR = notaRepository.findById(n.getIdnota());
+
+            if (notaR.isPresent()) {
+                if (dto.get().getIdusuario() == estudianteG.getIdusuario()) {
+                    Optional<Asignatura> asigR = asignaturaRepository.findById(n.getIdnota());
+                    n.setEstudiante(estudianteG);
+                    n.setAsignatura(asigR.get());
+                }
+            }
+        }
+
+        return notasGuardadas;
     }
 
     @Override
@@ -108,6 +142,12 @@ public class EstudianteServiceImpl implements EstudianteService {
         Optional<Estudiante> result = estudianteRepository.findById(estudiante.getIdusuario());
 
         if (result.isPresent()) {
+            for (Nota n : result.get().getNotas()) {
+                n.setEstudiante(null);
+                n.setAsignatura(null);
+            }
+            notaRepository.saveAll(result.get().getNotas());
+            notaRepository.deleteAll(result.get().getNotas());
             estudianteRepository.delete(estudiante);
             return true;
         } else {

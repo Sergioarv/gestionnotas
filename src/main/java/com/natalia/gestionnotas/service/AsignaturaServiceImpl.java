@@ -66,7 +66,11 @@ public class AsignaturaServiceImpl implements AsignaturaService {
             } else {
                 if (result2.get().getIdasignatura() == asignatura.getIdasignatura()) {
                     if(dto.get().getIdusuario() == null) {
-                        return asignaturaRepository.save(asignatura);
+                        if(result.get().getNotas().size() == 0) {
+                            return asignaturaRepository.save(asignatura);
+                        }else{
+                            throw new RuntimeException("La asignatura ya tiene notas y no se púede cambiar se nomnbre");
+                        }
                     }else{
                         throw new RuntimeException("La asignatura ya tiene un docente y no puede cambiarse su nombre");
                     }
@@ -88,18 +92,19 @@ public class AsignaturaServiceImpl implements AsignaturaService {
             if (result.isPresent()) {
                 Optional<AsignaturaDTO> dto = asignaturaRepository.DtoId(asignatura.getIdasignatura());
                 if(dto.get().getIdusuario() == null) {
-                    asignaturaRepository.delete(asignatura);
-                    return true;
+                    if(result.get().getNotas().size() == 0) {
+                        asignaturaRepository.delete(asignatura);
+                        return true;
+                    }
+                    throw new RuntimeException("No se puede eliminar, la asignatura ya contiene notas de estudiantes");
                 }else{
-                    throw new RuntimeException();
+                    throw new RuntimeException("No se puede eliminar, la asignatura ya que un profesor tiene asignado a esta materia");
                 }
             } else {
                 throw new RuntimeException("La asignatura que intenta eliminar no existe");
             }
         } catch (Exception ce) {
-            throw new RuntimeException("No se puede eliminar la asignatura ya que un profesor tiene asignada esta materia");
+            throw new RuntimeException(ce.getMessage());
         }
     }
-
-
 }
