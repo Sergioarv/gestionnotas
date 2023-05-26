@@ -26,7 +26,7 @@ public class AsignaturaController {
     @Autowired
     private AsignaturaService asignaturaService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR') or hasRole('ESTUDIANTE')")
     @GetMapping("/filtrar")
     public ResponseEntity<ResponseGeneral<Page<Asignatura>>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,

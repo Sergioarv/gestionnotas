@@ -1,6 +1,9 @@
 package com.natalia.gestionnotas.security.jwt;
 
+import com.natalia.gestionnotas.security.dto.JwtDto;
 import com.natalia.gestionnotas.security.entity.UsuarioPrincipal;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.JWTParser;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import com.nimbusds.jwt.JWT;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,5 +83,25 @@ public class JwtProvider {
             return true;
         }
         return false;
+    }
+
+    public String refreshToken(JwtDto jwtDTO) throws ParseException {
+        JWT jwt = JWTParser.parse(jwtDTO.getToken());
+        JWTClaimsSet claims = jwt.getJWTClaimsSet();
+        String username = claims.getSubject();
+        List<String> roles = (List<String>) claims.getClaim("roles");
+        long id = (long) claims.getClaim("id");
+        String nombre = (String) claims.getClaim("nombre");
+        String apellido = (String) claims.getClaim("apellido");
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("roles", roles)
+                .claim("id", id)
+                .claim("nombre", nombre)
+                .claim("apellido", apellido)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + expiration * 180))
+                .signWith(SignatureAlgorithm.HS512, secret.getBytes())
+                .compact();
     }
 }

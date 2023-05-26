@@ -29,7 +29,7 @@ public class EstudianteController {
     @Autowired
     private EstudianteService estudianteService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR') or hasRole('ESTUDIANTE')")
     @GetMapping
     public ResponseEntity<ResponseGeneral<List<Estudiante>>> listar(){
         ResponseGeneral<List<Estudiante>> response = new ResponseGeneral<>();
@@ -56,7 +56,7 @@ public class EstudianteController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
     @GetMapping("/filtrar")
     public ResponseEntity<ResponseGeneral<Page<Estudiante>>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,
