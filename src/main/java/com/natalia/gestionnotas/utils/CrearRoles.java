@@ -24,7 +24,7 @@ public class CrearRoles implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         Rol admin;
-        Rol docente;
+        Rol profesor;
         Rol estudiante;
 
         if (!rolService.getByRolNombre(RolNombre.ROLE_ADMIN).isPresent()) {
@@ -32,9 +32,9 @@ public class CrearRoles implements CommandLineRunner {
             rolService.crearRol(admin);
         }
 
-        if (!rolService.getByRolNombre(RolNombre.ROLE_DOCENTE).isPresent()) {
-            docente = new Rol(RolNombre.ROLE_DOCENTE);
-            rolService.crearRol(docente);
+        if (!rolService.getByRolNombre(RolNombre.ROLE_PROFESOR).isPresent()) {
+            profesor = new Rol(RolNombre.ROLE_PROFESOR);
+            rolService.crearRol(profesor);
         }
 
         if (!rolService.getByRolNombre(RolNombre.ROLE_ESTUDIANTE).isPresent()) {

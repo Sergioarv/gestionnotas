@@ -1,15 +1,20 @@
 package com.natalia.gestionnotas.security.controller;
 
+import com.natalia.gestionnotas.entity.Estudiante;
+import com.natalia.gestionnotas.entity.Profesor;
 import com.natalia.gestionnotas.entity.Usuario;
 import com.natalia.gestionnotas.security.dto.JwtDto;
 import com.natalia.gestionnotas.security.dto.LoginUsuario;
 import com.natalia.gestionnotas.security.jwt.JwtProvider;
 import com.natalia.gestionnotas.security.service.RolServiceImpl;
 import com.natalia.gestionnotas.security.service.UsuarioService;
+import com.natalia.gestionnotas.service.EstudianteService;
+import com.natalia.gestionnotas.service.ProfesorService;
 import com.natalia.gestionnotas.utils.ResponseGeneral;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,21 +36,29 @@ import javax.validation.Valid;
 @CrossOrigin("*")
 public class AuthController {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    UsuarioService usuarioService;
-
-
-    @Autowired
-    RolServiceImpl rolService;
+    private UsuarioService usuarioService;
 
     @Autowired
-    JwtProvider jwtProvider;
+    private EstudianteService estudianteService;
+
+    @Autowired
+    private ProfesorService profesorService;
+
+    @Autowired
+    private RolServiceImpl rolService;
+
+    @Autowired
+    private JwtProvider jwtProvider;
+
+    public AuthController(PasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<ResponseGeneral<?>> login(@Valid @RequestBody LoginUsuario loginUsuario){
@@ -83,23 +96,148 @@ public class AuthController {
     public ResponseEntity<ResponseGeneral<Usuario>> agregarAdministrador(@RequestBody Usuario admin){
 
         ResponseGeneral<Usuario> response = new ResponseGeneral<>();
-        Usuario nuevoEstudiante;
+        Usuario data;
         HttpStatus status = HttpStatus.OK;
 
-        admin.setContrasenia(passwordEncoder.encode(admin.getContrasenia()));
+        try {
+            admin.setContrasenia(bCryptPasswordEncoder.encode(admin.getContrasenia()));
+            data = usuarioService.agregarAdministrador(admin);
 
-        nuevoEstudiante = usuarioService.agregarAdministrador(admin);
-
-        if(nuevoEstudiante != null){
-            response.setData(nuevoEstudiante);
-            response.setSuccess(true);
-            response.setMessage("Administrador agregado con exito");
-        }else{
+            if (data != null) {
+                response.setData(data);
+                response.setSuccess(true);
+                response.setMessage("Administrador agregado con exito");
+            } else {
+                response.setData(null);
+                response.setSuccess(false);
+                response.setMessage("No se pudo agregar o ya existe el administrador");
+            }
+        }catch (Exception e){
             response.setData(null);
             response.setSuccess(false);
-            response.setMessage("No se pudo agregar o ya existe el administrador");
+            response.setMessage(e.getMessage());
         }
 
         return new ResponseEntity<>(response, status);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/estudiante")
+    public ResponseEntity<ResponseGeneral<Estudiante>> agregarEstudiante(
+            @RequestBody Estudiante estudiante) {
+
+        ResponseGeneral<Estudiante> response = new ResponseGeneral();
+        Estudiante data;
+
+        try {
+
+            estudiante.setContrasenia(bCryptPasswordEncoder.encode(estudiante.getContrasenia()));
+            data = estudianteService.agregarEstudiante(estudiante);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("No es posible agregar al estudiante");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Estudiante agregado con exito");
+                response.setSuccess(true);
+            }
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/estudiante")
+    public ResponseEntity<ResponseGeneral<Estudiante>> editarEstudiante(
+            @RequestBody Estudiante estudiante) {
+
+        ResponseGeneral<Estudiante> response = new ResponseGeneral<>();
+        Estudiante data;
+
+        try {
+            estudiante.setContrasenia(bCryptPasswordEncoder.encode(estudiante.getContrasenia()));
+            data  = estudianteService.editarEstudiante(estudiante);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("No es posible editar al estudiante");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Estudiante editado con exito");
+                response.setSuccess(true);
+            }
+
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/profesor")
+    public ResponseEntity<ResponseGeneral<Profesor>> agregarProfesor(
+            @RequestBody Profesor profesor) {
+
+        ResponseGeneral<Profesor> response = new ResponseGeneral<>();
+        Profesor data;
+
+        try {
+            profesor.setContrasenia(bCryptPasswordEncoder.encode(profesor.getContrasenia()));
+            data = profesorService.agregarProfesor(profesor);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("No es posible agregar al profesor");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Profesor agregado con exito");
+                response.setSuccess(true);
+            }
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/profesor")
+    public ResponseEntity<ResponseGeneral<Profesor>> editarProfesor(
+            @RequestBody Profesor profesor) {
+
+        ResponseGeneral<Profesor> response = new ResponseGeneral<>();
+        Profesor data;
+
+        try {
+            profesor.setContrasenia(bCryptPasswordEncoder.encode(profesor.getContrasenia()));
+            data = profesorService.editarProfesor(profesor);
+
+            if (data == null) {
+                response.setData(null);
+                response.setMessage("No es posible editar al profesor");
+                response.setSuccess(false);
+            } else {
+                response.setData(data);
+                response.setMessage("Profesor editado con exito");
+                response.setSuccess(true);
+            }
+
+        } catch (Exception e) {
+            response.setData(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

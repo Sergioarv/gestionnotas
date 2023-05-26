@@ -7,12 +7,10 @@ import com.natalia.gestionnotas.utils.ResponseGeneral;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @Project gestionnotas
@@ -52,6 +50,7 @@ public class NotaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR') or hasRole('ESTUDIANTE')")
     @GetMapping("/filtrar")
     public ResponseEntity<ResponseGeneral<Page<NotasDTO>>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,
@@ -94,8 +93,9 @@ public class NotaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
     @PostMapping
-    private ResponseEntity<ResponseGeneral<Nota>> agregarNota(
+    public ResponseEntity<ResponseGeneral<Nota>> agregarNota(
             @RequestBody Nota nota
     ) {
 
@@ -124,8 +124,9 @@ public class NotaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
     @PutMapping
-    private ResponseEntity<ResponseGeneral<Nota>> editarNota(
+    public ResponseEntity<ResponseGeneral<Nota>> editarNota(
             @RequestBody Nota nota
     ) {
 
@@ -155,6 +156,7 @@ public class NotaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
     @DeleteMapping
     private ResponseEntity<ResponseGeneral<Boolean>> eliminarNota(
             @RequestBody Nota nota

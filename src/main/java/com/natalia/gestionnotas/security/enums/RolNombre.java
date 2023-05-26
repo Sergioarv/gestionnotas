@@ -9,6 +9,6 @@ package com.natalia.gestionnotas.security.enums;
 
 public enum RolNombre {
 
-    ROLE_ADMIN, ROLE_DOCENTE, ROLE_ESTUDIANTE
+    ROLE_ADMIN, ROLE_PROFESOR, ROLE_ESTUDIANTE
 
 }

@@ -1,16 +1,14 @@
 package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.dto.NotasDTO;
-import com.natalia.gestionnotas.entity.Asignatura;
-import com.natalia.gestionnotas.entity.Estudiante;
-import com.natalia.gestionnotas.entity.Nota;
-import com.natalia.gestionnotas.entity.Profesor;
+import com.natalia.gestionnotas.entity.*;
 import com.natalia.gestionnotas.repository.AsignaturaRepository;
 import com.natalia.gestionnotas.repository.EstudianteRepository;
 import com.natalia.gestionnotas.repository.NotaRepository;
 import com.natalia.gestionnotas.repository.ProfesorRepository;
 import com.natalia.gestionnotas.security.entity.Rol;
 import com.natalia.gestionnotas.security.enums.RolNombre;
+import com.natalia.gestionnotas.security.repository.UsuarioRepository;
 import com.natalia.gestionnotas.security.service.RolServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +31,6 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Autowired
     private EstudianteRepository estudianteRepository;
-
     @Autowired
     private RolServiceImpl rolService;
     @Autowired
@@ -42,6 +39,8 @@ public class EstudianteServiceImpl implements EstudianteService {
     private NotaRepository notaRepository;
     @Autowired
     private AsignaturaRepository asignaturaRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -70,8 +69,9 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         Optional<Estudiante> resultE = estudianteRepository.findByCorreo(estudiante.getCorreo());
         Optional<Profesor> resultP = profesorRepository.findByCorreo(estudiante.getCorreo());
+        Optional<Usuario> resultA = usuarioRepository.findByCorreo(estudiante.getCorreo());
 
-        if (!resultE.isPresent() && !resultP.isPresent()) {
+        if (!resultE.isPresent() && !resultP.isPresent() && !resultA.isPresent()) {
             Set<Rol> roles = new HashSet<>();
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_ESTUDIANTE).get());
             estudiante.setRoles(roles);
@@ -80,7 +80,6 @@ public class EstudianteServiceImpl implements EstudianteService {
         } else {
             throw new RuntimeException("El correo del estudiante ya existe");
         }
-
     }
 
     @Override
@@ -95,11 +94,12 @@ public class EstudianteServiceImpl implements EstudianteService {
         if (result.isPresent()) {
             Optional<Estudiante> resultE = estudianteRepository.findByCorreo(estudiante.getCorreo());
             Optional<Profesor> resultP = profesorRepository.findByCorreo(estudiante.getCorreo());
+            Optional<Usuario> resultA = usuarioRepository.findByCorreo(estudiante.getCorreo());
 
             notasGuardadas = estudiante.getNotas();
             estudiante.setNotas(null);
 
-            if (!resultE.isPresent() && !resultP.isPresent()) {
+            if (!resultE.isPresent() && !resultP.isPresent() && !resultA.isPresent()) {
                 estudianteG = estudianteRepository.save(estudiante);
                 notasGuardadas = settearNotas(notasGuardadas, estudianteG);
             } else if (resultE.isPresent() && resultE.get().getIdusuario() == estudiante.getIdusuario()) {

@@ -61,7 +61,7 @@ public class AsignaturaServiceImpl implements AsignaturaService {
                 if(dto.get().getIdusuario() == null) {
                     return asignaturaRepository.save(asignatura);
                 }else{
-                    throw new RuntimeException("La asignatura ya tiene un docente y no puede cambiarse su nombre");
+                    throw new RuntimeException("La asignatura ya tiene un profesor y no puede cambiarse su nombre");
                 }
             } else {
                 if (result2.get().getIdasignatura() == asignatura.getIdasignatura()) {
@@ -72,7 +72,7 @@ public class AsignaturaServiceImpl implements AsignaturaService {
                             throw new RuntimeException("La asignatura ya tiene notas y no se púede cambiar se nomnbre");
                         }
                     }else{
-                        throw new RuntimeException("La asignatura ya tiene un docente y no puede cambiarse su nombre");
+                        throw new RuntimeException("La asignatura ya tiene un profesor y no puede cambiarse su nombre");
                     }
                 }
                 throw new RuntimeException("El nuevo nombre de la asignatura ya existe");

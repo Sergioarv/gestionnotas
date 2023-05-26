@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,6 +26,7 @@ public class AsignaturaController {
     @Autowired
     private AsignaturaService asignaturaService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/filtrar")
     public ResponseEntity<ResponseGeneral<Page<Asignatura>>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,
@@ -66,8 +68,9 @@ public class AsignaturaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    private ResponseEntity<ResponseGeneral<Asignatura>> agregarAsignatura(
+    public ResponseEntity<ResponseGeneral<Asignatura>> agregarAsignatura(
             @RequestBody Asignatura asignatura) {
 
         ResponseGeneral<Asignatura> response = new ResponseGeneral<>();
@@ -95,8 +98,9 @@ public class AsignaturaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping
-    private ResponseEntity<ResponseGeneral<Asignatura>> editarAsignatura(
+    public ResponseEntity<ResponseGeneral<Asignatura>> editarAsignatura(
             @RequestBody Asignatura asignatura) {
 
         ResponseGeneral<Asignatura> response = new ResponseGeneral<>();
@@ -124,8 +128,9 @@ public class AsignaturaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping
-    private ResponseEntity<ResponseGeneral<Boolean>> eliminarAsignatura(
+    public ResponseEntity<ResponseGeneral<Boolean>> eliminarAsignatura(
             @RequestBody Asignatura asignatura) {
 
         ResponseGeneral<Boolean> response = new ResponseGeneral<>();

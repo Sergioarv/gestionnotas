@@ -4,11 +4,13 @@ import com.natalia.gestionnotas.dto.AsignaturaDTO;
 import com.natalia.gestionnotas.entity.Asignatura;
 import com.natalia.gestionnotas.entity.Estudiante;
 import com.natalia.gestionnotas.entity.Profesor;
+import com.natalia.gestionnotas.entity.Usuario;
 import com.natalia.gestionnotas.repository.AsignaturaRepository;
 import com.natalia.gestionnotas.repository.EstudianteRepository;
 import com.natalia.gestionnotas.repository.ProfesorRepository;
 import com.natalia.gestionnotas.security.entity.Rol;
 import com.natalia.gestionnotas.security.enums.RolNombre;
+import com.natalia.gestionnotas.security.repository.UsuarioRepository;
 import com.natalia.gestionnotas.security.service.RolServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,9 +37,13 @@ public class ProfesorServiceImpl implements ProfesorService {
     private AsignaturaRepository asignaturaRepository;
 
     @Autowired
-    RolServiceImpl rolService;
+    private RolServiceImpl rolService;
+
     @Autowired
     private EstudianteRepository estudianteRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -61,6 +67,7 @@ public class ProfesorServiceImpl implements ProfesorService {
 
         Optional<Profesor> resultP = profesorRepository.findByCorreo(profesor.getCorreo());
         Optional<Estudiante> resultE = estudianteRepository.findByCorreo(profesor.getCorreo());
+        Optional<Usuario> resultA = usuarioRepository.findByCorreo(profesor.getCorreo());
 
         List<Asignatura> asigGuardadas = new ArrayList<>();
         List<Asignatura> asignaturaG = new ArrayList<>();
@@ -68,13 +75,13 @@ public class ProfesorServiceImpl implements ProfesorService {
         Profesor profesorG = new Profesor();
 
         Set<Rol> roles = new HashSet<>();
-        roles.add(rolService.getByRolNombre(RolNombre.ROLE_DOCENTE).get());
+        roles.add(rolService.getByRolNombre(RolNombre.ROLE_PROFESOR).get());
         profesor.setRoles(roles);
 
         asigGuardadas = profesor.getAsignaturas();
         profesor.setAsignaturas(null);
 
-        if (!resultP.isPresent() && !resultE.isPresent()) {
+        if (!resultP.isPresent() && !resultE.isPresent() && !resultA.isPresent()) {
             profesorG = profesorRepository.save(profesor);
             asigGuardadas = settearAsignaturas(asigGuardadas, asigRemover, profesorG);
         } else {
@@ -134,12 +141,13 @@ public class ProfesorServiceImpl implements ProfesorService {
 
             Optional<Profesor> resultP = profesorRepository.findByCorreo(profesor.getCorreo());
             Optional<Estudiante> resultE = estudianteRepository.findByCorreo(profesor.getCorreo());
+            Optional<Usuario> resultA = usuarioRepository.findByCorreo(profesor.getCorreo());
 
             asigOriginal = result.get().getAsignaturas();
             asigGuardadas = profesor.getAsignaturas();
             profesor.setAsignaturas(null);
 
-            if(!resultP.isPresent() && !resultE.isPresent()){
+            if(!resultP.isPresent() && !resultE.isPresent() && !resultA.isPresent()){
                 profesorG = profesorRepository.save(profesor);
                 asigGuardadas = settearAsignaturas(asigGuardadas, asigRemover, profesorG);
             } else if (resultP.isPresent() && resultP.get().getIdusuario() == profesor.getIdusuario()) {

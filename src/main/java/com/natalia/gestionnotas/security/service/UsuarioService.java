@@ -29,7 +29,6 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
     @Autowired
     private RolServiceImpl rolService;
     @Autowired
@@ -40,11 +39,16 @@ public class UsuarioService {
     public Usuario getByCorreo(String correo) throws Exception {
         Optional<Estudiante> e = estudianteRepository.findByCorreo(correo);
         Optional<Profesor> p = profesorRepository.findByCorreo(correo);
+        Optional<Usuario> a = usuarioRepository.findByCorreo(correo);
+
         if(e.isPresent()){
             return e.get();
         }
         if(p.isPresent()){
             return p.get();
+        }
+        if(a.isPresent()){
+            return a.get();
         }
         throw new Exception("El usuario no existe");
     }
@@ -62,13 +66,18 @@ public class UsuarioService {
 
     public Usuario agregarAdministrador(Usuario admin) {
 
-        if (!usuarioRepository.existsByCorreo(admin.getCorreo())) {
+        Optional<Estudiante> resultE = estudianteRepository.findByCorreo(admin.getCorreo());
+        Optional<Profesor> resultP = profesorRepository.findByCorreo(admin.getCorreo());
+        Optional<Usuario> resultA = usuarioRepository.findByCorreo(admin.getCorreo());
+
+        if (!resultE.isPresent() && !resultP.isPresent() && !resultA.isPresent()) {
             Set<Rol> roles = new HashSet<>();
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
             admin.setRoles(roles);
 
             return usuarioRepository.save(admin);
+        }else{
+            throw new RuntimeException("El correo del administrador ya existe");
         }
-        return null;
     }
 }

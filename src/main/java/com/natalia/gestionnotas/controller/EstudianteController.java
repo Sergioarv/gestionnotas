@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +29,7 @@ public class EstudianteController {
     @Autowired
     private EstudianteService estudianteService;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<ResponseGeneral<List<Estudiante>>> listar(){
         ResponseGeneral<List<Estudiante>> response = new ResponseGeneral<>();
@@ -57,6 +56,7 @@ public class EstudianteController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/filtrar")
     public ResponseEntity<ResponseGeneral<Page<Estudiante>>> filtrar(
             @RequestParam(value = "nombre", required = false) String nombre,
@@ -99,68 +99,9 @@ public class EstudianteController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping
-    private ResponseEntity<ResponseGeneral<Estudiante>> agregarEstudiante(
-            @RequestBody Estudiante estudiante) {
-
-        ResponseGeneral<Estudiante> response = new ResponseGeneral();
-        Estudiante data;
-
-        try {
-
-            estudiante.setContrasenia(passwordEncoder.encode(estudiante.getContrasenia()));
-
-            data = estudianteService.agregarEstudiante(estudiante);
-
-            if (data == null) {
-                response.setData(null);
-                response.setMessage("No es posible agregar al estudiante");
-                response.setSuccess(false);
-            } else {
-                response.setData(data);
-                response.setMessage("Estudiante agregado con exito");
-                response.setSuccess(true);
-            }
-        } catch (Exception e) {
-            response.setData(null);
-            response.setMessage(e.getMessage());
-            response.setSuccess(false);
-        }
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PutMapping
-    private ResponseEntity<ResponseGeneral<Estudiante>> editarEstudiante(
-            @RequestBody Estudiante estudiante) {
-
-        ResponseGeneral<Estudiante> response = new ResponseGeneral<>();
-        Estudiante data;
-
-        try {
-            estudiante.setContrasenia(passwordEncoder.encode(estudiante.getContrasenia()));
-            data  = estudianteService.editarEstudiante(estudiante);
-
-            if (data == null) {
-                response.setData(null);
-                response.setMessage("No es posible editar al estudiante");
-                response.setSuccess(false);
-            } else {
-                response.setData(data);
-                response.setMessage("Estudiante editado con exito");
-                response.setSuccess(true);
-            }
-
-        } catch (Exception e) {
-            response.setData(null);
-            response.setMessage(e.getMessage());
-            response.setSuccess(false);
-        }
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping
-    private ResponseEntity<ResponseGeneral<Boolean>> eliminarEstudiante(
+    public ResponseEntity<ResponseGeneral<Boolean>> eliminarEstudiante(
             @RequestBody Estudiante estudiante) {
 
         ResponseGeneral<Boolean> response = new ResponseGeneral();
