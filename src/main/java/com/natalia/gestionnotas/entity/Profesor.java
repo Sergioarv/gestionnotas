@@ -1,6 +1,9 @@
 package com.natalia.gestionnotas.entity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,6 @@ import java.util.List;
  **/
 
 @Entity
-//@PrimaryKeyJoinColumn(name = "idusuario")
 public class Profesor extends Usuario{
 
     @OneToMany(mappedBy = "profesor", cascade=CascadeType.ALL, fetch = FetchType.EAGER)

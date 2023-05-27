@@ -152,7 +152,7 @@ public class AuthController {
     public ResponseEntity<ResponseGeneral<Estudiante>> agregarEstudiante(
             @RequestBody Estudiante estudiante) {
 
-        ResponseGeneral<Estudiante> response = new ResponseGeneral();
+        ResponseGeneral<Estudiante> response = new ResponseGeneral<>();
         Estudiante data;
 
         try {

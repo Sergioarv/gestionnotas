@@ -2,6 +2,7 @@ package com.natalia.gestionnotas.security.jwt;
 
 import com.natalia.gestionnotas.security.dto.JwtDto;
 import com.natalia.gestionnotas.security.entity.UsuarioPrincipal;
+import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTParser;
 import io.jsonwebtoken.*;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-import com.nimbusds.jwt.JWT;
 
 import java.text.ParseException;
 import java.util.Date;

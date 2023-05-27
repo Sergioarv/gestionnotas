@@ -19,9 +19,6 @@ import java.util.Optional;
 @Repository
 public interface ProfesorRepository extends JpaRepository<Profesor, Integer> {
 
-//    @Query(value = "select p from Profesor p")
-//    Page<Profesor> filtrar();
-
     Optional<Profesor> findByCorreo(String profesor);
 
     @Query(value = "select * from profesor where lower(nombre) like lower(concat('%',:nombre,'%')) and lower(apellido) like lower(concat('%',:apellido,'%'))", nativeQuery = true)

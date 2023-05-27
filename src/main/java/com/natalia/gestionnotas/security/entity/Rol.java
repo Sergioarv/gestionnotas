@@ -1,6 +1,7 @@
 package com.natalia.gestionnotas.security.entity;
 
 import com.natalia.gestionnotas.security.enums.RolNombre;
+
 import javax.persistence.*;
 
 

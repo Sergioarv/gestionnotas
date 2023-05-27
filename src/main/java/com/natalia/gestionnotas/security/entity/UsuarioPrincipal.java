@@ -27,18 +27,21 @@ public class UsuarioPrincipal implements UserDetails {
 
     private String contrasenia;
 
+    private String clave;
+
     private Collection<? extends GrantedAuthority> autoridades;
 
     /**
      * Constructor
      **/
 
-    public UsuarioPrincipal(int idusuario, String nombre, String apellido, String correo, String contrasenia, Collection<? extends GrantedAuthority> autoridades) {
+    public UsuarioPrincipal(int idusuario, String nombre, String apellido, String correo, String contrasenia, String clave, Collection<? extends GrantedAuthority> autoridades) {
         this.idusuario = idusuario;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
         this.contrasenia = contrasenia;
+        this.clave = clave;
         this.autoridades = autoridades;
     }
 
@@ -47,7 +50,7 @@ public class UsuarioPrincipal implements UserDetails {
                 usuario.getRoles().stream().map(rol -> new SimpleGrantedAuthority(
                         rol.getRolNombre().name())).collect(Collectors.toList());
         return new UsuarioPrincipal(usuario.getIdusuario(), usuario.getNombre(), usuario.getApellido(),
-                usuario.getCorreo(), usuario.getContrasenia(), authorities);
+                usuario.getCorreo(), usuario.getContrasenia(), usuario.getClave(), authorities);
     }
 
     @Override
@@ -111,5 +114,13 @@ public class UsuarioPrincipal implements UserDetails {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 }

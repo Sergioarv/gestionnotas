@@ -29,8 +29,8 @@ public class NotaController {
 
     @GetMapping("/verificar")
     public ResponseEntity<ResponseGeneral<NotasDTO>> verificar(
-            @RequestParam(value = "idusuario", required = true) int idusuario,
-            @RequestParam(value = "idasignatura", required = true) int idasignatura
+            @RequestParam(value = "idusuario") int idusuario,
+            @RequestParam(value = "idasignatura") int idasignatura
     ){
         ResponseGeneral<NotasDTO> response = new ResponseGeneral<>();
         NotasDTO data;
@@ -130,7 +130,7 @@ public class NotaController {
             @RequestBody Nota nota
     ) {
 
-        ResponseGeneral<Nota> response = new ResponseGeneral();
+        ResponseGeneral<Nota> response = new ResponseGeneral<>();
         Nota data;
 
         try {

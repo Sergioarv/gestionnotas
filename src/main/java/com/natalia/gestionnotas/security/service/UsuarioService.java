@@ -58,6 +58,7 @@ public class UsuarioService {
         if(estudianteRepository.existsByCorreo(correo)){
             return true;
         }
+
         if(profesorRepository.existsByCorreo(correo)){
             return true;
         }

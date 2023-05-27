@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -104,7 +103,7 @@ public class EstudianteController {
     public ResponseEntity<ResponseGeneral<Boolean>> eliminarEstudiante(
             @RequestBody Estudiante estudiante) {
 
-        ResponseGeneral<Boolean> response = new ResponseGeneral();
+        ResponseGeneral<Boolean> response = new ResponseGeneral<>();
         boolean data;
 
         try {

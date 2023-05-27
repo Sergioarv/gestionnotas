@@ -69,10 +69,10 @@ public class ProfesorServiceImpl implements ProfesorService {
         Optional<Estudiante> resultE = estudianteRepository.findByCorreo(profesor.getCorreo());
         Optional<Usuario> resultA = usuarioRepository.findByCorreo(profesor.getCorreo());
 
-        List<Asignatura> asigGuardadas = new ArrayList<>();
-        List<Asignatura> asignaturaG = new ArrayList<>();
+        List<Asignatura> asigGuardadas;
+        List<Asignatura> asignaturaG;
         List<Asignatura> asigRemover = new ArrayList<>();
-        Profesor profesorG = new Profesor();
+        Profesor profesorG;
 
         Set<Rol> roles = new HashSet<>();
         roles.add(rolService.getByRolNombre(RolNombre.ROLE_PROFESOR).get());
@@ -130,12 +130,12 @@ public class ProfesorServiceImpl implements ProfesorService {
 
         Optional<Profesor> result = profesorRepository.findById(profesor.getIdusuario());
 
-        List<Asignatura> asigGuardadas = new ArrayList<>();
-        List<Asignatura> asignaturaG = new ArrayList<>();
+        List<Asignatura> asigGuardadas;
+        List<Asignatura> asignaturaG;
         List<Asignatura> asigRemover = new ArrayList<>();
         List<Asignatura> asigAnteriores = new ArrayList<>();
-        List<Asignatura> asigOriginal = new ArrayList<>();
-        Profesor profesorG = new Profesor();
+        List<Asignatura> asigOriginal;
+        Profesor profesorG;
 
         if (result.isPresent()) {
 

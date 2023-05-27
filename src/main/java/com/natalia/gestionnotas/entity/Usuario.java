@@ -2,6 +2,7 @@ package com.natalia.gestionnotas.entity;
 
 
 import com.natalia.gestionnotas.security.entity.Rol;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -35,6 +36,9 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     private String contrasenia;
 
+    @Column(nullable = false)
+    private String clave;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "idusuario", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "idrol", nullable = false))
@@ -47,11 +51,12 @@ public class Usuario implements Serializable {
     public Usuario() {
     }
 
-    public Usuario(String nombre, String apellido, String correo, String contrasenia) {
+    public Usuario(String nombre, String apellido, String correo, String contrasenia, String clave) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
         this.contrasenia = contrasenia;
+        this.clave = clave;
     }
 
     /** Getter y Setter **/
@@ -102,5 +107,13 @@ public class Usuario implements Serializable {
 
     public void setRoles(Set<Rol> roles) {
         this.roles = roles;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 }

@@ -2,7 +2,6 @@ package com.natalia.gestionnotas.service;
 
 import com.natalia.gestionnotas.entity.Estudiante;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
